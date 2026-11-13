@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#080a14" />
+  <meta name="description" content="eres mi viernes 13... TE AMO LIZET — Marcos Menchaca" />
+  <title>Viernes 13 ✨ — Para Lizet</title>
+
+  <!-- Hojas de estilo -->
+  <link rel="stylesheet" href="css/animations.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Canvas con partículas (Pétalos de girasol y destellos dorados) -->
+  <canvas id="canvas-backdrop"></canvas>
+  <div class="ambient-bg" aria-hidden="true"></div>
+
+  <main class="app-shell">
+
+    <!-- ====================================================================
+         ETAPA 1: PANTALLA DE ENTRADA (CLAVE VIERNES13)
+         ==================================================================== -->
+    <section id="stage-login" class="stage is-active" aria-labelledby="login-heading">
+      <div class="glass-card login-card" id="login-card">
+        
+        <div class="login-artwork">
+          <div class="artwork-ring"></div>
+          <img src="img/portada.png" alt="Viernes 13 Girasoles" class="artwork-img" />
+        </div>
+
+        <span class="badge-pill">🌻 NUESTRO DÍA DE LA SUERTE</span>
+        <h1 id="login-heading" class="login-title">Viernes 13</h1>
+        <p class="login-subtitle">
+          Dicen que los viernes 13 dan mala suerte... hasta que llegaste tú a cambiarlo todo.
+        </p>
+
+        <form id="login-form" class="login-form" autocomplete="off">
+          <div class="password-input-wrap">
+            <input
+              type="password"
+              id="password-input"
+              class="password-input"
+              placeholder="Ingresa nuestra clave secreta..."
+              required
+              autocomplete="current-password"
+            />
+            <button type="button" id="toggle-pwd-btn" class="toggle-pwd-btn" aria-label="Mostrar clave">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+
+          <div id="login-error" class="form-error"></div>
+
+          <button type="submit" class="btn-login">
+            <span>Abrir nuestro portal</span> 💖
+          </button>
+
+          <p class="login-hint">Pista: el nombre de nuestro día especial (viernes13)</p>
+        </form>
+
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         ETAPA 2: BIENVENIDA / PORTAL ROMÁNTICO
+         ==================================================================== -->
+    <section id="stage-welcome" class="stage" aria-labelledby="welcome-heading">
+      <div class="glass-card welcome-card">
+        
+        <div class="welcome-sunflower-icon">🌻</div>
+        <span class="badge-pill love">✨ CAPÍTULO 1</span>
+        
+        <h2 id="welcome-heading" class="welcome-title">
+          Hola, mi amor <span>Lizet</span>
+        </h2>
+        
+        <p class="welcome-text">
+          Tú tienes todo lo que busco. Conocerte para mí es todo un gusto, y cada momento a tu lado me recuerda que fuiste, eres y serás mi casualidad favorita en este mundo.
+        </p>
+
+        <div class="welcome-quote">
+          “Que tú pones buena suerte en mi viernes 13...”
+        </div>
+
+        <button type="button" id="btn-start-music" class="btn-welcome">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <span>Escuchar nuestra canción</span>
+        </button>
+
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         ETAPA 3: REPRODUCTOR MODO SPOTIFY CON LETRA EN VIVO
+         ==================================================================== -->
+    <section id="stage-music" class="stage" aria-labelledby="track-heading">
+      <div class="spotify-layout">
+        
+        <!-- PANEL IZQUIERDO: REPRODUCTOR -->
+        <div class="glass-card player-card">
+          
+          <div class="player-cover-container">
+            <div class="player-cover-aura"></div>
+            <img src="img/portada.png" alt="Marcos Menchaca - Viernes 13" class="player-cover-img" id="player-cover-img" />
+          </div>
+
+          <div class="track-header">
+            <div class="track-details">
+              <span class="badge-pill spotify">MODO SPOTIFY</span>
+              <h2 id="track-heading" class="track-title">Viernes 13</h2>
+              <p class="track-artist">Marcos Menchaca</p>
+            </div>
+            
+            <!-- Botón Me Gusta interactivo -->
+            <button type="button" class="like-btn" id="like-btn" aria-label="Guardar en favoritos" title="Me gusta">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Mensaje dedicado especial -->
+          <div class="dedication-banner">
+            <span>eres mi viernes 13... TE AMO LIZET</span> 🌻
+          </div>
+
+          <!-- Barra de Progreso Spotify -->
+          <div class="progress-section">
+            <div class="progress-slider-wrap" id="progress-wrap" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-fill" id="progress-fill">
+                <span class="progress-thumb"></span>
+              </div>
+            </div>
+            <div class="time-row">
+              <span id="current-time">0:00</span>
+              <span id="duration-time">0:00</span>
+            </div>
+          </div>
+
+          <!-- Controles de Transporte -->
+          <div class="controls-row">
+            <button type="button" class="ctrl-btn" id="loop-btn" title="Repetir canción" aria-label="Repetir">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="17 1 21 5 17 9"></polyline>
+                <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                <polyline points="7 23 3 19 7 15"></polyline>
+                <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+              </svg>
+            </button>
+
+            <button type="button" class="ctrl-btn" id="rewind-btn" title="Retroceder 10s" aria-label="Retroceder 10 segundos">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12.5 3C17.15 3 21 6.85 21 11.5c0 4.65-3.85 8.5-8.5 8.5-4.22 0-7.72-3.1-8.38-7.17l2.02-.33c.5 3.1 3.15 5.5 6.36 5.5 3.59 0 6.5-2.91 6.5-6.5S16.09 5 12.5 5c-2.05 0-3.88.95-5.07 2.45L10 10H3V3l2.84 2.84C7.5 4.09 9.85 3 12.5 3z"/>
+              </svg>
+            </button>
+
+            <button type="button" class="ctrl-btn-play" id="play-btn" aria-label="Reproducir o pausar">
+              <svg id="icon-play" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z"/>
+              </svg>
+              <svg id="icon-pause" viewBox="0 0 24 24" style="display:none;">
+                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+              </svg>
+            </button>
+
+            <button type="button" class="ctrl-btn" id="forward-btn" title="Adelantar 10s" aria-label="Adelantar 10 segundos">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M11.5 3C6.85 3 3 6.85 3 11.5 3 16.15 6.85 20 11.5 20c4.22 0 7.72-3.1 8.38-7.17l-2.02-.33c-.5 3.1-3.15 5.5-6.36 5.5-3.59 0-6.5-2.91-6.5-6.5S7.91 5 11.5 5c2.05 0 3.88.95 5.07 2.45L14 10h7V3l-2.84 2.84C16.5 4.09 14.15 3 11.5 3z"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Acciones secundarias -->
+          <div class="extra-actions">
+            <button type="button" class="btn-secondary-link" id="to-finale-btn">
+              💌 Ver carta para Lizet
+            </button>
+          </div>
+
+          <!-- Elemento de audio nativo -->
+          <audio id="audio-player" preload="metadata"></audio>
+        </div>
+
+        <!-- PANEL DERECHO: LETRA SINCRONIZADA ESTILO SPOTIFY -->
+        <div class="glass-card lyrics-card">
+          <div class="lyrics-header">
+            <div class="lyrics-title-group">
+              <span class="badge-pill spotify">LETRA EN VIVO</span>
+              <h2>Letras de la canción</h2>
+            </div>
+            <span class="lyrics-hint">Toca cualquier verso para escuchar</span>
+          </div>
+
+          <!-- Contenedor scrolleable centrado -->
+          <div class="lyrics-viewport" id="lyrics-viewport">
+            <!-- Los versos se inyectan automáticamente desde js/app.js -->
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ====================================================================
+         ETAPA 4: CAPÍTULO FINAL / CARTA DE AMOR
+         ==================================================================== -->
+    <section id="stage-finale" class="stage" aria-labelledby="finale-heading">
+      <div class="glass-card finale-card">
+        
+        <div class="finale-artwork">
+          <img src="img/portada.png" alt="Para Lizet con todo mi amor" />
+        </div>
+
+        <span class="badge-pill love">PARA TODA LA VIDA</span>
+        <h2 id="finale-heading" class="finale-title">eres mi viernes 13...</h2>
+        <p class="finale-subtitle">TE AMO LIZET 🌻💖</p>
+
+        <article class="letter-paper">
+          <p>
+            <strong class="letter-highlight">Mi niña hermosa Lizet:</strong>
+          </p>
+          <p>
+            Desde el instante en que llegaste a mi vida entendí que la verdadera suerte existe. Mucha gente dice que el viernes 13 es un día de misterio y temores, pero para mí es el recordatorio más hermoso de que en ti encontré todo lo que siempre soñé.
+          </p>
+          <p>
+            <span class="letter-highlight">Tú tienes todo lo que busco</span>, y conocerte es todo un gusto que agradezco cada día. Tienes algo en particular, algo que no entiendo del todo pero que no me para de enamorar: tu sonrisa sincera, tus miradas que no mienten y esa paz tan inmensa que siento cuando estoy a tu lado.
+          </p>
+          <p>
+            Yo sé que te lo he dicho mil veces, pero te lo repito hoy, mañana y siempre: nadie te va a querer como yo lo voy a hacer. No ocupo de nadie más; si la vida me diera a escoger mil veces más, <span class="letter-highlight">te escojo a ti, otra vez</span>.
+          </p>
+          <p>
+            Gracias por poner luz, alegría y tanta buena suerte en cada uno de mis días.
+          </p>
+          <p class="letter-sign">
+            Con todo mi amor para ti, Lizet. Siempre tuyo. ✨
+          </p>
+        </article>
+
+        <div class="finale-buttons">
+          <button type="button" class="btn-finale-listen" id="btn-replay-song">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M8 5v14l11-7z"/>
+            </svg>
+            <span>Volver a escuchar la canción</span>
+          </button>
+          
+          <button type="button" class="btn-finale-restart" id="btn-restart-app">
+            <span>↺ Volver al inicio</span>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Script interactivo -->
+  <script src="js/app.js"></script>
+</body>
+</html>

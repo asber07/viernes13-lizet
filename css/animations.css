@@ -1,0 +1,106 @@
+/* ==========================================================================
+   ANIMACIONES - VIERNES 13 (ERES MI VIERNES 13... TE AMO LIZET)
+   ========================================================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeScaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 25px rgba(251, 191, 36, 0.35), 0 0 50px rgba(29, 185, 84, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(251, 191, 36, 0.55), 0 0 70px rgba(29, 185, 84, 0.4);
+  }
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  14% {
+    transform: scale(1.18);
+  }
+  28% {
+    transform: scale(1);
+  }
+  42% {
+    transform: scale(1.15);
+  }
+  70% {
+    transform: scale(1);
+  }
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shakeError {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20%, 60% {
+    transform: translateX(-10px);
+  }
+  40%, 80% {
+    transform: translateX(10px);
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(1.5deg);
+  }
+}
+
+@keyframes lyricHighlight {
+  0% {
+    transform: scale(0.97);
+    color: rgba(255, 255, 255, 0.6);
+  }
+  100% {
+    transform: scale(1.04);
+    color: #ffffff;
+    text-shadow: 0 0 16px rgba(251, 191, 36, 0.6), 0 0 30px rgba(29, 185, 84, 0.4);
+  }
+}
+
+@keyframes auroraFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

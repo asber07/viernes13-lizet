@@ -1,0 +1,880 @@
+/* ==========================================================================
+   ESTILOS PRINCIPALES - VIERNES 13 (MODO SPOTIFY ROMÁNTICO)
+   Dedicado a Lizet: "eres mi viernes 13... TE AMO LIZET"
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+  --bg-dark: #080a14;
+  --bg-deep: #0c1020;
+  --panel-bg: rgba(16, 22, 42, 0.78);
+  --panel-border: rgba(255, 255, 255, 0.12);
+  --panel-border-glow: rgba(251, 191, 36, 0.35);
+
+  /* Acentos temáticos: Girasol, Spotify y Amor */
+  --spotify-green: #1db954;
+  --spotify-green-hover: #1ed760;
+  --sunflower-gold: #fbbf24;
+  --sunflower-amber: #f59e0b;
+  --rose-love: #ff4d6d;
+  --rose-glow: rgba(255, 77, 109, 0.4);
+
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  min-height: 100%;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  font-family: var(--font-family);
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Canvas de fondo con partículas interactivas */
+#canvas-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Fondo decorativo con gradientes suaves */
+.ambient-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  background: 
+    radial-gradient(circle at 15% 15%, rgba(245, 158, 11, 0.16) 0%, transparent 45%),
+    radial-gradient(circle at 85% 85%, rgba(29, 185, 84, 0.14) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(255, 77, 109, 0.12) 0%, transparent 60%),
+    linear-gradient(180deg, #090c16 0%, #060810 100%);
+  filter: blur(20px);
+}
+
+/* Shell general */
+.app-shell {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 16px;
+}
+
+/* Etapas */
+.stage {
+  display: none;
+  width: 100%;
+  max-width: 1100px;
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.stage.is-active {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tarjetas de cristal (Glassmorphism) */
+.glass-card {
+  background: var(--panel-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--panel-border);
+  border-radius: 24px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 30px rgba(251, 191, 36, 0.08);
+  padding: 36px 30px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: rgba(251, 191, 36, 0.3);
+}
+
+/* Badges / Píldoras */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  color: var(--sunflower-gold);
+  margin-bottom: 12px;
+}
+
+.badge-pill.spotify {
+  background: rgba(29, 185, 84, 0.15);
+  border-color: rgba(29, 185, 84, 0.35);
+  color: var(--spotify-green-hover);
+}
+
+.badge-pill.love {
+  background: rgba(255, 77, 109, 0.15);
+  border-color: rgba(255, 77, 109, 0.35);
+  color: var(--rose-love);
+}
+
+/* ==========================================================================
+   ETAPA 1: PANTALLA DE ENTRADA (LOGIN / CLAVE VIERNES13)
+   ========================================================================== */
+.login-card {
+  width: 100%;
+  max-width: 460px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-artwork {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  margin-bottom: 20px;
+}
+
+.artwork-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, var(--sunflower-gold), var(--rose-love), var(--spotify-green), var(--sunflower-gold));
+  animation: spinSlow 12s linear infinite;
+  filter: blur(4px);
+  opacity: 0.8;
+}
+
+.artwork-img {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #fff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.login-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #fff 30%, var(--sunflower-gold) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.login-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.login-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.password-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.password-input {
+  width: 100%;
+  padding: 14px 48px 14px 18px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--panel-border);
+  color: #fff;
+  font-size: 1.05rem;
+  outline: none;
+  transition: all 0.25s ease;
+  letter-spacing: 0.05em;
+}
+
+.password-input:focus {
+  border-color: var(--sunflower-gold);
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.25);
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.toggle-pwd-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.toggle-pwd-btn:hover {
+  color: #fff;
+}
+
+.form-error {
+  color: #f87171;
+  font-size: 0.86rem;
+  margin-top: -6px;
+  min-height: 20px;
+  transition: opacity 0.2s ease;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 15px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--sunflower-gold) 0%, var(--sunflower-amber) 50%, var(--rose-love) 100%);
+  color: #0b0f19;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.35);
+  transition: all 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(245, 158, 11, 0.5);
+  filter: brightness(1.08);
+}
+
+.btn-login:active {
+  transform: translateY(0);
+}
+
+.login-hint {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-top: 8px;
+}
+
+/* ==========================================================================
+   ETAPA 2: BIENVENIDA (PORTAL ROMÁNTICO)
+   ========================================================================== */
+.welcome-card {
+  width: 100%;
+  max-width: 580px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.welcome-sunflower-icon {
+  font-size: 3.5rem;
+  margin-bottom: 12px;
+  animation: floatGentle 4s ease-in-out infinite;
+}
+
+.welcome-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 14px;
+  line-height: 1.25;
+}
+
+.welcome-title span {
+  color: var(--sunflower-gold);
+}
+
+.welcome-text {
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 28px;
+}
+
+.welcome-quote {
+  font-style: italic;
+  padding: 14px 18px;
+  border-left: 3px solid var(--sunflower-gold);
+  background: rgba(251, 191, 36, 0.08);
+  border-radius: 0 12px 12px 0;
+  margin-bottom: 26px;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.btn-welcome {
+  padding: 16px 36px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--spotify-green) 0%, var(--spotify-green-hover) 100%);
+  color: #041208;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 8px 30px rgba(29, 185, 84, 0.4);
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-welcome:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 35px rgba(29, 185, 84, 0.55);
+}
+
+/* ==========================================================================
+   ETAPA 3: REPRODUCTOR MODO SPOTIFY CON LETRA SINCRONIZADA
+   ========================================================================== */
+.spotify-layout {
+  display: grid;
+  grid-template-columns: 440px 1fr;
+  gap: 28px;
+  width: 100%;
+  max-width: 1100px;
+  align-items: stretch;
+}
+
+/* Tarjeta del Reproductor (Izquierda) */
+.player-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 22px;
+}
+
+.player-cover-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+}
+
+.player-cover-aura {
+  position: absolute;
+  inset: -15px;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.35) 0%, rgba(29, 185, 84, 0.25) 50%, transparent 70%);
+  filter: blur(25px);
+  z-index: 1;
+  opacity: 0.8;
+  transition: opacity 0.5s ease;
+}
+
+.player-cover-img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 18px;
+  transition: transform 0.4s ease;
+}
+
+.player-cover-container:hover .player-cover-img {
+  transform: scale(1.03);
+}
+
+/* Información de la canción */
+.track-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.track-details {
+  flex: 1;
+}
+
+.track-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+
+.track-artist {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Botón Me Gusta (Corazón interactivo) */
+.like-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  color: var(--text-muted);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.like-btn.is-liked {
+  color: var(--rose-love);
+  transform: scale(1.2);
+  animation: heartbeat 1.2s infinite;
+}
+
+.like-btn svg {
+  width: 28px;
+  height: 28px;
+  fill: currentColor;
+}
+
+/* Frase especial de amor */
+.dedication-banner {
+  background: linear-gradient(90deg, rgba(255, 77, 109, 0.16) 0%, rgba(251, 191, 36, 0.16) 100%);
+  border: 1px solid rgba(255, 77, 109, 0.3);
+  padding: 10px 14px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 77, 109, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Barra de Progreso Spotify */
+.progress-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-slider-wrap {
+  position: relative;
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.progress-slider-wrap:hover {
+  height: 8px;
+}
+
+.progress-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--spotify-green) 0%, var(--sunflower-gold) 100%);
+  border-radius: 999px;
+  transition: width 0.1s linear;
+}
+
+.progress-thumb {
+  position: absolute;
+  top: 50%;
+  right: -5px;
+  transform: translateY(-50%) scale(0);
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+  transition: transform 0.15s ease;
+}
+
+.progress-slider-wrap:hover .progress-thumb {
+  transform: translateY(-50%) scale(1);
+}
+
+.time-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Controles de Reproducción */
+.controls-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.ctrl-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ctrl-btn:hover {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.ctrl-btn.active {
+  color: var(--spotify-green);
+}
+
+.ctrl-btn-play {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #fff;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.ctrl-btn-play:hover {
+  background: var(--spotify-green-hover);
+  color: #fff;
+  transform: scale(1.08);
+  box-shadow: 0 8px 25px rgba(29, 185, 84, 0.5);
+}
+
+.ctrl-btn-play svg {
+  width: 26px;
+  height: 26px;
+  fill: currentColor;
+}
+
+/* Acciones extras */
+.extra-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-secondary-link {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--panel-border);
+  color: var(--text-muted);
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-secondary-link:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+/* Tarjeta de Letras Modo Spotify (Derecha) */
+.lyrics-card {
+  display: flex;
+  flex-direction: column;
+  height: 600px;
+  padding: 24px 28px;
+}
+
+.lyrics-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.lyrics-title-group h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+.lyrics-hint {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+}
+
+/* Contenedor scrolleable de letras estilo Spotify */
+.lyrics-viewport {
+  flex: 1;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding: 40px 10px 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+}
+
+.lyrics-viewport::-webkit-scrollbar {
+  width: 5px;
+}
+
+.lyrics-viewport::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+
+/* Línea de letra */
+.lyric-line {
+  font-size: 1.28rem;
+  font-weight: 700;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.32);
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 6px 12px;
+  border-radius: 10px;
+  transform-origin: left center;
+}
+
+.lyric-line:hover {
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Línea activa cantada en ese instante */
+.lyric-line.is-active {
+  color: #ffffff;
+  font-size: 1.55rem;
+  transform: scale(1.03) translateX(6px);
+  text-shadow: 0 0 20px rgba(251, 191, 36, 0.7), 0 0 35px rgba(29, 185, 84, 0.5);
+}
+
+.lyric-line.is-passed {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ==========================================================================
+   ETAPA 4: CAPÍTULO FINAL / CARTA DE AMOR
+   ========================================================================== */
+.finale-card {
+  width: 100%;
+  max-width: 680px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 44px 36px;
+}
+
+.finale-artwork {
+  width: 160px;
+  height: 160px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  margin-bottom: 20px;
+  border: 2px solid rgba(251, 191, 36, 0.4);
+}
+
+.finale-artwork img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.finale-title {
+  font-size: 2.1rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #fff 0%, var(--sunflower-gold) 60%, var(--rose-love) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.finale-subtitle {
+  font-size: 1.15rem;
+  color: var(--rose-love);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 24px;
+}
+
+.letter-paper {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: 26px 28px;
+  text-align: left;
+  line-height: 1.8;
+  color: #e2e8f0;
+  font-size: 1.02rem;
+  margin-bottom: 28px;
+  position: relative;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.letter-paper p {
+  margin-bottom: 14px;
+}
+
+.letter-paper p:last-child {
+  margin-bottom: 0;
+}
+
+.letter-highlight {
+  color: var(--sunflower-gold);
+  font-weight: 600;
+}
+
+.letter-sign {
+  text-align: right;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--rose-love);
+  margin-top: 18px !important;
+}
+
+.finale-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+}
+
+.btn-finale-listen {
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--spotify-green) 0%, var(--spotify-green-hover) 100%);
+  color: #031307;
+  font-size: 1rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 25px rgba(29, 185, 84, 0.35);
+  transition: all 0.25s ease;
+}
+
+.btn-finale-listen:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(29, 185, 84, 0.5);
+}
+
+.btn-finale-restart {
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--panel-border);
+  color: var(--text-main);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-finale-restart:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (MÓVILES Y PANTALLAS PEQUEÑAS)
+   ========================================================================== */
+@media (max-width: 900px) {
+  .spotify-layout {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+  }
+
+  .lyrics-card {
+    height: 480px;
+    padding: 20px;
+  }
+
+  .player-cover-container {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+
+  .track-header {
+    text-align: center;
+    flex-direction: column;
+  }
+
+  .lyric-line {
+    font-size: 1.15rem;
+  }
+
+  .lyric-line.is-active {
+    font-size: 1.35rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-shell {
+    padding: 16px 10px;
+  }
+
+  .glass-card {
+    padding: 24px 18px;
+    border-radius: 20px;
+  }
+
+  .login-title {
+    font-size: 1.55rem;
+  }
+
+  .welcome-title {
+    font-size: 1.75rem;
+  }
+
+  .track-title {
+    font-size: 1.35rem;
+  }
+
+  .lyrics-card {
+    height: 420px;
+  }
+}

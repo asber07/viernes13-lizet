@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sincronizador de Letra — Marcos Menchaca - Viernes 13</title>
+  <style>
+    :root {
+      --bg: #090c15;
+      --bg-card: rgba(18, 24, 43, 0.85);
+      --bg-card-hover: rgba(28, 36, 64, 0.9);
+      --border: rgba(255, 255, 255, 0.12);
+      --border-active: #ff4d6d;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #ff4d6d;
+      --accent-hover: #ff2a51;
+      --accent-glow: rgba(255, 77, 109, 0.35);
+      --cyan: #38bdf8;
+      --green: #22c55e;
+      --yellow: #eab308;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-main);
+      background: radial-gradient(circle at 10% 20%, #171d36 0%, var(--bg) 70%);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+    }
+
+    /* Contenedor principal */
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 24px 20px 60px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Encabezado */
+    header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+
+    .header-info h1 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 77, 109, 0.15);
+      border: 1px solid rgba(255, 77, 109, 0.4);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .header-info p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .header-stats {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stat-pill {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .stat-pill strong {
+      color: var(--cyan);
+    }
+
+    /* Barra de estado */
+    .status-alert {
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #bae6fd;
+    }
+
+    .status-alert.warning {
+      background: rgba(234, 179, 8, 0.12);
+      border-color: rgba(234, 179, 8, 0.35);
+      color: #fef08a;
+    }
+
+    .status-alert.success {
+      background: rgba(34, 197, 94, 0.12);
+      border-color: rgba(34, 197, 94, 0.35);
+      color: #bbf7d0;
+    }
+
+    /* Panel de Reproductor / Controles */
+    .player-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Barra de transporte principal */
+    .transport-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .transport-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Botones */
+    button {
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: none;
+      outline: none;
+      border-radius: 10px;
+      transition: all 0.15s ease-in-out;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      padding: 10px 20px;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    /* Botón gigante de sincronizar */
+    .btn-mark-giant {
+      background: linear-gradient(135deg, #ff4d6d 0%, #a855f7 100%);
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: 13px 26px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(255, 77, 109, 0.4);
+      letter-spacing: 0.02em;
+    }
+
+    .btn-mark-giant:hover {
+      filter: brightness(1.1);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 77, 109, 0.55);
+    }
+
+    .btn-mark-giant:active {
+      transform: translateY(0);
+    }
+
+    /* Selectores */
+    .rate-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    select {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    select option {
+      background: #111827;
+      color: #fff;
+    }
+
+    /* Barra de Progreso */
+    .progress-container {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .time-display {
+      font-variant-numeric: tabular-nums;
+      font-size: 0.95rem;
+      font-weight: 600;
+      min-width: 55px;
+      color: var(--cyan);
+    }
+
+    .time-display.total {
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      height: 8px;
+      border-radius: 4px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    /* Vista previa en vivo / Frase activa */
+    .live-preview-box {
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 77, 109, 0.25);
+      border-radius: 12px;
+      padding: 16px 20px;
+      text-align: center;
+    }
+
+    .live-preview-box .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .live-preview-box .text {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+      text-shadow: 0 0 15px rgba(255, 77, 109, 0.6);
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .live-preview-box .subtext {
+      font-size: 0.88rem;
+      color: var(--cyan);
+      margin-top: 4px;
+    }
+
+    /* Layout principal: Lista de frases a la izquierda, Exportador a la derecha */
+    .sync-grid {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    @media (max-width: 960px) {
+      .sync-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Panel de Letras */
+    .lyrics-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 12px;
+    }
+
+    .card-header h2 {
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    .card-header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Lista scrolleable de líneas */
+    .lines-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 580px;
+      overflow-y: auto;
+      padding-right: 6px;
+    }
+
+    .lines-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .lines-list::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+
+    /* Fila de cada verso */
+    .line-row {
+      display: grid;
+      grid-template-columns: 36px 95px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 9px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      transition: all 0.15s ease;
+    }
+
+    .line-row:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .line-row.active {
+      border-color: var(--accent);
+      background: rgba(255, 77, 109, 0.12);
+      box-shadow: 0 0 12px rgba(255, 77, 109, 0.25);
+    }
+
+    .line-row.synced {
+      border-left: 4px solid var(--green);
+    }
+
+    .line-row.current-singing {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--cyan);
+    }
+
+    .line-index {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .line-time-tag {
+      font-variant-numeric: tabular-nums;
+      font-family: monospace;
+      font-size: 0.86rem;
+      padding: 4px 6px;
+      border-radius: 6px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--cyan);
+      cursor: pointer;
+    }
+
+    .line-time-tag.empty {
+      color: #64748b;
+      border-style: dashed;
+    }
+
+    .line-text-input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 0.95rem;
+      width: 100%;
+      padding: 4px;
+    }
+
+    .line-text-input:focus {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 4px;
+    }
+
+    .line-controls {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-icon-tiny {
+      padding: 5px 8px;
+      font-size: 0.75rem;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      color: var(--text-muted);
+    }
+
+    .btn-icon-tiny:hover {
+      background: rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+
+    /* Panel de Exportación y LRC */
+    .export-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 20px;
+    }
+
+    .export-card textarea {
+      width: 100%;
+      height: 380px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      color: #93c5fd;
+      font-family: Consolas, 'Courier New', monospace;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      padding: 12px;
+      resize: vertical;
+      outline: none;
+      white-space: pre;
+    }
+
+    .export-card textarea:focus {
+      border-color: var(--cyan);
+    }
+
+    .export-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .shortcut-legend {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .shortcut-row {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    kbd {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-family: inherit;
+      color: #fff;
+      font-size: 0.75rem;
+    }
+
+    /* Modal / Text Editor */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-overlay.hidden {
+      display: none;
+    }
+
+    .modal-box {
+      background: #111827;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 650px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .modal-box textarea {
+      width: 100%;
+      height: 350px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: #fff;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="header-info">
+        <span class="badge">HERRAMIENTA OFICIAL DE SINCRONIZACIÓN</span>
+        <h1>Sincronizador LRC — Viernes 13</h1>
+        <p>Canción: <strong>Marcos Menchaca - Viernes 13</strong> | Sincroniza cada verso con precisión para el sitio web.</p>
+      </div>
+      <div class="header-stats">
+        <div class="stat-pill">
+          Progreso: <strong id="progress-text">0 / 37</strong>
+        </div>
+      </div>
+    </header>
+
+    <!-- Estado del Audio -->
+    <div id="status-banner" class="status-alert">
+      <span>Cargando recursos locales...</span>
+      <input type="file" id="audio-file-input" accept="audio/*" style="display:none;" />
+      <button class="btn-secondary" id="btn-browse-audio" style="padding:6px 12px; font-size:0.8rem;">
+        📂 Cambiar / Seleccionar MP3
+      </button>
+    </div>
+
+    <!-- Panel de Reproducción & Sincronización -->
+    <section class="player-panel">
+      <!-- Botones principales -->
+      <div class="transport-bar">
+        <div class="transport-left">
+          <button id="btn-play" class="btn-primary" type="button">
+            ▶ Reproducir (P)
+          </button>
+          <button id="btn-rewind" class="btn-secondary" type="button">
+            ⏪ -3s (←)
+          </button>
+          <button id="btn-forward" class="btn-secondary" type="button">
+            ⏩ +3s (→)
+          </button>
+          <div class="rate-wrapper">
+            <span>Velocidad:</span>
+            <select id="playback-rate">
+              <option value="0.5">0.5x</option>
+              <option value="0.75">0.75x</option>
+              <option value="1" selected>1.0x (Normal)</option>
+              <option value="1.25">1.25x</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <button id="btn-mark-now" class="btn-mark-giant" type="button">
+            ⚡ MARCAR TIEMPO AQUÍ (Espacio / Enter)
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de progreso / Seeker -->
+      <div class="progress-container">
+        <span id="current-time-display" class="time-display">0:00.0</span>
+        <input type="range" id="seek-bar" min="0" max="100" step="0.05" value="0" />
+        <span id="duration-display" class="time-display total">0:00.0</span>
+      </div>
+
+      <!-- Vista previa en tiempo real -->
+      <div class="live-preview-box">
+        <div class="label">Frase activa / Siguiente en marcar:</div>
+        <div id="live-active-text" class="text">Presiona Reproducir y marca la primera frase</div>
+        <div id="live-active-sub" class="subtext">Línea 1 de 37</div>
+      </div>
+
+      <!-- Elemento Audio Oculto -->
+      <audio id="audio-player" preload="metadata"></audio>
+    </section>
+
+    <!-- Contenido en 2 Columnas -->
+    <div class="sync-grid">
+      
+      <!-- Lista de Versos -->
+      <section class="lyrics-card">
+        <div class="card-header">
+          <h2>Versos de la Canción (<span id="line-count-badge">37</span>)</h2>
+          <div class="card-header-actions">
+            <button id="btn-undo" class="btn-secondary" type="button" disabled>
+              ↩ Deshacer último
+            </button>
+            <button id="btn-reset-all" class="btn-secondary" type="button">
+              🗑 Borrar tiempos
+            </button>
+            <button id="btn-edit-lyrics" class="btn-secondary" type="button">
+              ✏ Editar Letra TXT
+            </button>
+          </div>
+        </div>
+
+        <div id="lyrics-lines-container" class="lines-list">
+          <!-- Se llena dinámicamente con las 37 líneas -->
+        </div>
+      </section>
+
+      <!-- Panel de Exportación LRC & Atajos -->
+      <aside class="export-card">
+        <div class="card-header">
+          <h2>Archivo LRC Generado</h2>
+        </div>
+
+        <p style="font-size:0.85rem; color:var(--text-muted);">
+          El texto se actualiza automáticamente a medida que vas marcando.
+        </p>
+
+        <textarea id="lrc-output" readonly placeholder="[00:00.00] Letra aquí..."></textarea>
+
+        <div class="export-buttons">
+          <button id="btn-download-lrc" class="btn-primary" type="button">
+            💾 Descargar letra.lrc
+          </button>
+          <button id="btn-download-json" class="btn-secondary" type="button">
+            📄 Descargar letra.json
+          </button>
+          <button id="btn-copy-lrc" class="btn-secondary" type="button">
+            📋 Copiar al Portapapeles
+          </button>
+        </div>
+
+        <div class="shortcut-legend">
+          <div style="font-weight:700; color:#fff; margin-bottom:2px;">Atajos de Teclado:</div>
+          <div class="shortcut-row">
+            <span>Marcar verso actual:</span>
+            <span><kbd>Espacio</kbd> o <kbd>Enter</kbd></span>
+          </div>
+          <div class="shortcut-row">
+            <span>Reproducir / Pausa:</span>
+            <span><kbd>P</kbd></span>
+          </div>
+          <div class="shortcut-row">
+            <span>Avanzar / Retroceder 3s:</span>
+            <span><kbd>→</kbd> / <kbd>←</kbd></span>
+          </div>
+          <div class="shortcut-row">
+            <span>Deshacer última marca:</span>
+            <span><kbd>Ctrl+Z</kbd></span>
+          </div>
+          <div class="shortcut-row">
+            <span>Cambiar verso activo:</span>
+            <span>Clic en la fila</span>
+          </div>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- Modal para editar letra completa -->
+  <div id="modal-edit" class="modal-overlay hidden">
+    <div class="modal-box">
+      <h3>Editar / Reemplazar Letra (Texto Plano)</h3>
+      <p style="font-size:0.85rem; color:var(--text-muted);">
+        Pega o edita las líneas de la canción (un verso por línea). Si ya contiene marcas [mm:ss.xx], se conservarán.
+      </p>
+      <textarea id="modal-textarea"></textarea>
+      <div style="display:flex; justify-content:flex-end; gap:10px;">
+        <button id="btn-modal-cancel" class="btn-secondary" type="button">Cancelar</button>
+        <button id="btn-modal-save" class="btn-primary" type="button">Guardar y Aplicar</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Letra original cargada desde LETRA/musica.txt.txt
+    const DEFAULT_LYRICS = [
+      "Tú tienes todo lo que busco",
+      "Conocerte para mí es todo un gusto",
+      "Tienes algo en particular, algo que te hace más",
+      "Algo que no entiendo, que no me para de enamorar",
+      "Tú sabes bien quién eres, la que me mancha de labial",
+      "La que se duerme sin despedir y sin avisar",
+      "La que le encanta molestar y fregar",
+      "La más bella del lugar",
+      "Y me llevas lentamente a imaginar",
+      "A una vida donde tú puedas estar",
+      "Y me llevas lentamente a imaginar",
+      "A una vida donde te pueda cuidar",
+      "Yo sé que te he dicho mil veces",
+      "Que nadie te va a querer, como yo lo voy a hacer",
+      "Que tú pones buena suerte en mi viernes 13",
+      "Que tengo tu nombre tatuado en mi piel",
+      "Que ya te extraño, aunque te haya visto ayer",
+      "Sostente fuerte, yo siento lo mismo que tú sientes",
+      "Miradas que no mienten, sonrisas que muestran dientes",
+      "Contigo todo es más que suficiente",
+      "No ocupo de alguien más, solo a ti presente",
+      "Y me llevas lentamente a imaginar",
+      "A una vida donde tú puedas estar",
+      "Y me llevas lentamente a imaginar",
+      "A una vida donde te pueda cuidar",
+      "Porque si no es contigo, no es con nadie más",
+      "Es algo que tú nunca, nunca entenderás",
+      "Con alguien más, yo no me puedo conformar",
+      "Sabiendo que alguien va a tomar mi lugar",
+      "Nadie te verá, como yo te voy a ver",
+      "Quiero cumplir las cosas que acordamos en hacer",
+      "Y si la vida me da a escoger",
+      "Te escojo a ti, otra vez",
+      "Y me llevas lentamente a imaginar",
+      "A una vida donde tú puedas estar",
+      "Y me llevas lentamente a imaginar",
+      "A una vida donde te pueda cuidar"
+    ];
+
+    const DEFAULT_AUDIO_PATH = "musica/Marcos Menchaca - Viernes 13 (Letra).mp3";
+    const STORAGE_KEY = "viernes13_lyrics_sync_data";
+
+    // Estado de la aplicación
+    let items = []; // { text: string, time: number | null }
+    let activeIndex = 0; // Índice de la línea que se marcará a continuación
+    let historyStack = [];
+
+    // Elementos DOM
+    const audio = document.getElementById('audio-player');
+    const audioInput = document.getElementById('audio-file-input');
+    const btnBrowseAudio = document.getElementById('btn-browse-audio');
+    const statusBanner = document.getElementById('status-banner');
+    const btnPlay = document.getElementById('btn-play');
+    const btnRewind = document.getElementById('btn-rewind');
+    const btnForward = document.getElementById('btn-forward');
+    const rateSelect = document.getElementById('playback-rate');
+    const btnMarkNow = document.getElementById('btn-mark-now');
+    const seekBar = document.getElementById('seek-bar');
+    const currentTimeDisplay = document.getElementById('current-time-display');
+    const durationDisplay = document.getElementById('duration-display');
+    const liveActiveText = document.getElementById('live-active-text');
+    const liveActiveSub = document.getElementById('live-active-sub');
+    const progressText = document.getElementById('progress-text');
+    const lineCountBadge = document.getElementById('line-count-badge');
+    const linesContainer = document.getElementById('lyrics-lines-container');
+    const lrcOutput = document.getElementById('lrc-output');
+    const btnUndo = document.getElementById('btn-undo');
+    const btnResetAll = document.getElementById('btn-reset-all');
+    const btnEditLyrics = document.getElementById('btn-edit-lyrics');
+    const btnDownloadLrc = document.getElementById('btn-download-lrc');
+    const btnDownloadJson = document.getElementById('btn-download-json');
+    const btnCopyLrc = document.getElementById('btn-copy-lrc');
+
+    const modalEdit = document.getElementById('modal-edit');
+    const modalTextarea = document.getElementById('modal-textarea');
+    const btnModalCancel = document.getElementById('btn-modal-cancel');
+    const btnModalSave = document.getElementById('btn-modal-save');
+
+    // Inicialización
+    function init() {
+      // 1. Cargar items desde localStorage si existen, o desde default
+      loadSavedState();
+
+      // 2. Configurar audio
+      setupAudio();
+
+      // 3. Renderizar interfaz
+      renderLines();
+      updateOutputs();
+      updateActivePreview();
+
+      // 4. Asignar eventos
+      bindEvents();
+    }
+
+    function setupAudio() {
+      audio.src = DEFAULT_AUDIO_PATH;
+
+      audio.addEventListener('loadedmetadata', () => {
+        durationDisplay.textContent = formatTime(audio.duration);
+        seekBar.max = audio.duration;
+        statusBanner.className = 'status-alert success';
+        statusBanner.innerHTML = `
+          <span>✅ Audio cargado correctamente: <strong>${DEFAULT_AUDIO_PATH}</strong> (${formatTime(audio.duration)})</span>
+          <button class="btn-secondary" id="btn-browse-audio-2" style="padding:4px 10px; font-size:0.8rem;">Cambiar MP3</button>
+        `;
+        document.getElementById('btn-browse-audio-2')?.addEventListener('click', () => audioInput.click());
+      });
+
+      audio.addEventListener('error', () => {
+        statusBanner.className = 'status-alert warning';
+        statusBanner.innerHTML = `
+          <span>⚠️ No se pudo reproducir directo ("${DEFAULT_AUDIO_PATH}"). Haz clic en el botón para cargar el archivo MP3 manualmente desde tu carpeta.</span>
+          <button class="btn-primary" id="btn-browse-audio-err" style="padding:6px 14px; font-size:0.82rem;">📂 Seleccionar MP3</button>
+        `;
+        document.getElementById('btn-browse-audio-err')?.addEventListener('click', () => audioInput.click());
+      });
+
+      btnBrowseAudio.addEventListener('click', () => audioInput.click());
+
+      audioInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const url = URL.createObjectURL(file);
+          audio.src = url;
+          audio.play().catch(() => {});
+          statusBanner.className = 'status-alert success';
+          statusBanner.innerHTML = `<span>✅ Archivo local en reproducción: <strong>${file.name}</strong></span>`;
+        }
+      });
+    }
+
+    function loadSavedState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            items = parsed;
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn("No se pudo leer localStorage:", e);
+      }
+
+      // Si no hay datos guardados, usar los defaults
+      items = DEFAULT_LYRICS.map(line => ({ text: line.trim(), time: null }));
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      } catch (e) {
+        console.warn("No se pudo guardar en localStorage:", e);
+      }
+    }
+
+    function formatTime(seconds) {
+      if (seconds === null || seconds === undefined || isNaN(seconds)) return "--:--.--";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      const ms = Math.floor((seconds % 1) * 100);
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${String(ms).padStart(2, '0')}`;
+    }
+
+    function formatLrcTimestamp(seconds) {
+      if (seconds === null || isNaN(seconds)) return "";
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      const ms = Math.floor((seconds % 1) * 100);
+      return `[${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${String(ms).padStart(2, '0')}]`;
+    }
+
+    function renderLines() {
+      linesContainer.innerHTML = '';
+      lineCountBadge.textContent = items.length;
+
+      items.forEach((item, index) => {
+        const row = document.createElement('div');
+        row.className = `line-row ${index === activeIndex ? 'active' : ''} ${item.time !== null ? 'synced' : ''}`;
+        row.dataset.index = index;
+
+        const timeText = item.time !== null ? formatTime(item.time) : '--:--.--';
+
+        row.innerHTML = `
+          <div class="line-index">${index + 1}</div>
+          <div class="line-time-tag ${item.time === null ? 'empty' : ''}" title="Clic para reproducir en este momento">${timeText}</div>
+          <input type="text" class="line-text-input" value="${escapeHtml(item.text)}" spellcheck="false" />
+          <div class="line-controls">
+            ${item.time !== null ? `
+              <button class="btn-icon-tiny" data-action="play-here" title="Reproducir desde aquí">▶</button>
+              <button class="btn-icon-tiny" data-action="adjust" data-step="-0.1" title="Restar 0.1s">-0.1s</button>
+              <button class="btn-icon-tiny" data-action="adjust" data-step="+0.1" title="Sumar 0.1s">+0.1s</button>
+              <button class="btn-icon-tiny" data-action="clear-time" title="Borrar tiempo">✕</button>
+            ` : `
+              <button class="btn-icon-tiny" data-action="mark-now" title="Marcar con tiempo actual">⏱ Marcar</button>
+            `}
+          </div>
+        `;
+
+        // Eventos en cada fila
+        row.addEventListener('click', (e) => {
+          if (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'button') return;
+          setActiveIndex(index);
+          if (item.time !== null) {
+            audio.currentTime = item.time;
+          }
+        });
+
+        // Edición directa del texto
+        const input = row.querySelector('.line-text-input');
+        input.addEventListener('change', () => {
+          items[index].text = input.value.trim();
+          saveState();
+          updateOutputs();
+          updateActivePreview();
+        });
+
+        // Botones de control
+        row.querySelectorAll('button[data-action]').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const action = btn.dataset.action;
+            if (action === 'play-here') {
+              if (item.time !== null) {
+                audio.currentTime = item.time;
+                audio.play();
+                setActiveIndex(index);
+              }
+            } else if (action === 'mark-now') {
+              recordMarkAt(index, audio.currentTime);
+            } else if (action === 'adjust') {
+              const step = parseFloat(btn.dataset.step);
+              adjustTimeAt(index, step);
+            } else if (action === 'clear-time') {
+              recordMarkAt(index, null);
+            }
+          });
+        });
+
+        // Clic en la etiqueta de tiempo
+        const timeTag = row.querySelector('.line-time-tag');
+        timeTag.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (item.time !== null) {
+            audio.currentTime = item.time;
+            audio.play();
+            setActiveIndex(index);
+          } else {
+            recordMarkAt(index, audio.currentTime);
+          }
+        });
+
+        linesContainer.appendChild(row);
+      });
+
+      scrollActiveIntoView();
+      updateStats();
+    }
+
+    function scrollActiveIntoView() {
+      const activeRow = linesContainer.children[activeIndex];
+      if (activeRow) {
+        activeRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+
+    function setActiveIndex(newIndex) {
+      if (newIndex < 0) newIndex = 0;
+      if (newIndex >= items.length) newIndex = items.length - 1;
+      activeIndex = newIndex;
+
+      // Actualizar clases activas sin re-renderizar todo
+      Array.from(linesContainer.children).forEach((row, i) => {
+        row.classList.toggle('active', i === activeIndex);
+      });
+
+      updateActivePreview();
+      scrollActiveIntoView();
+    }
+
+    function updateActivePreview() {
+      if (activeIndex >= 0 && activeIndex < items.length) {
+        liveActiveText.textContent = items[activeIndex].text;
+        const timeStr = items[activeIndex].time !== null ? ` (Sincronizado: ${formatTime(items[activeIndex].time)})` : ' (Sin sincronizar)';
+        liveActiveSub.textContent = `Línea ${activeIndex + 1} de ${items.length}${timeStr}`;
+      } else {
+        liveActiveText.textContent = "¡Todas las líneas han sido sincronizadas!";
+        liveActiveSub.textContent = "Puedes revisar y descargar tu letra.lrc";
+      }
+    }
+
+    function updateStats() {
+      const syncedCount = items.filter(it => it.time !== null).length;
+      progressText.textContent = `${syncedCount} / ${items.length}`;
+      btnUndo.disabled = historyStack.length === 0;
+    }
+
+    function recordMarkAt(index, timeVal) {
+      // Guardar en el historial para Undo
+      historyStack.push({
+        index: index,
+        prevTime: items[index].time,
+        prevActive: activeIndex
+      });
+
+      items[index].time = timeVal !== null ? Math.round(timeVal * 100) / 100 : null;
+      saveState();
+
+      // Si marcamos, avanzar automáticamente al siguiente
+      if (timeVal !== null && index + 1 < items.length) {
+        activeIndex = index + 1;
+      }
+
+      renderLines();
+      updateOutputs();
+      updateActivePreview();
+    }
+
+    function adjustTimeAt(index, step) {
+      if (items[index].time === null) return;
+      const newTime = Math.max(0, Math.round((items[index].time + step) * 100) / 100);
+      items[index].time = newTime;
+      saveState();
+      renderLines();
+      updateOutputs();
+    }
+
+    function markNextLine() {
+      if (activeIndex < items.length) {
+        recordMarkAt(activeIndex, audio.currentTime);
+      }
+    }
+
+    function undoLast() {
+      if (historyStack.length === 0) return;
+      const last = historyStack.pop();
+      items[last.index].time = last.prevTime;
+      activeIndex = last.index;
+      saveState();
+      renderLines();
+      updateOutputs();
+      updateActivePreview();
+    }
+
+    function generateLrc() {
+      let lrc = `[ti:Viernes 13]\n[ar:Marcos Menchaca]\n[al:Viernes 13 - Sincronizado]\n[by:Antigravity Sync Tool]\n\n`;
+      items.forEach(item => {
+        if (item.time !== null) {
+          lrc += `${formatLrcTimestamp(item.time)}${item.text}\n`;
+        } else {
+          lrc += `${item.text}\n`;
+        }
+      });
+      return lrc;
+    }
+
+    function generateJson() {
+      return JSON.stringify(items.map(it => ({
+        time: it.time,
+        text: it.text
+      })), null, 2);
+    }
+
+    function updateOutputs() {
+      lrcOutput.value = generateLrc();
+    }
+
+    function bindEvents() {
+      // Play / Pause
+      btnPlay.addEventListener('click', togglePlay);
+
+      // Rewind / Forward
+      btnRewind.addEventListener('click', () => {
+        audio.currentTime = Math.max(0, audio.currentTime - 3);
+      });
+      btnForward.addEventListener('click', () => {
+        audio.currentTime = Math.min(audio.duration || 9999, audio.currentTime + 3);
+      });
+
+      // Speed change
+      rateSelect.addEventListener('change', () => {
+        audio.playbackRate = parseFloat(rateSelect.value);
+      });
+
+      // Mark button
+      btnMarkNow.addEventListener('click', markNextLine);
+
+      // Undo button
+      btnUndo.addEventListener('click', undoLast);
+
+      // Reset all
+      btnResetAll.addEventListener('click', () => {
+        if (confirm("¿Estás seguro de que deseas borrar todos los tiempos sincronizados?")) {
+          historyStack.push({
+            allState: JSON.parse(JSON.stringify(items)),
+            prevActive: activeIndex
+          });
+          items.forEach(it => it.time = null);
+          activeIndex = 0;
+          saveState();
+          renderLines();
+          updateOutputs();
+          updateActivePreview();
+        }
+      });
+
+      // Seeker
+      seekBar.addEventListener('input', () => {
+        audio.currentTime = parseFloat(seekBar.value);
+      });
+
+      audio.addEventListener('timeupdate', () => {
+        currentTimeDisplay.textContent = formatTime(audio.currentTime);
+        seekBar.value = audio.currentTime;
+        highlightCurrentSingingLine(audio.currentTime);
+      });
+
+      // Teclado shortcuts globales
+      window.addEventListener('keydown', (e) => {
+        // Ignorar si el usuario está escribiendo en un input o textarea
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+          return;
+        }
+
+        if (e.code === 'Space' || e.code === 'Enter') {
+          e.preventDefault();
+          markNextLine();
+        } else if (e.code === 'KeyP') {
+          e.preventDefault();
+          togglePlay();
+        } else if (e.code === 'ArrowLeft') {
+          e.preventDefault();
+          audio.currentTime = Math.max(0, audio.currentTime - 3);
+        } else if (e.code === 'ArrowRight') {
+          e.preventDefault();
+          audio.currentTime = Math.min(audio.duration || 9999, audio.currentTime + 3);
+        } else if (e.code === 'KeyZ' && (e.ctrlKey || e.metaKey)) {
+          e.preventDefault();
+          undoLast();
+        }
+      });
+
+      // Copiar y Descargar
+      btnCopyLrc.addEventListener('click', () => {
+        navigator.clipboard.writeText(lrcOutput.value).then(() => {
+          btnCopyLrc.textContent = '✅ ¡Copiado!';
+          setTimeout(() => btnCopyLrc.textContent = '📋 Copiar al Portapapeles', 2000);
+        });
+      });
+
+      btnDownloadLrc.addEventListener('click', () => {
+        downloadFile('letra.lrc', lrcOutput.value, 'text/plain');
+      });
+
+      btnDownloadJson.addEventListener('click', () => {
+        downloadFile('letra.json', generateJson(), 'application/json');
+      });
+
+      // Modal de edición de texto plano
+      btnEditLyrics.addEventListener('click', () => {
+        modalTextarea.value = items.map(it => {
+          return it.time !== null ? `${formatLrcTimestamp(it.time)}${it.text}` : it.text;
+        }).join('\n');
+        modalEdit.classList.remove('hidden');
+      });
+
+      btnModalCancel.addEventListener('click', () => {
+        modalEdit.classList.add('hidden');
+      });
+
+      btnModalSave.addEventListener('click', () => {
+        const text = modalTextarea.value;
+        parseAndApplyLyrics(text);
+        modalEdit.classList.add('hidden');
+      });
+    }
+
+    function togglePlay() {
+      if (audio.paused) {
+        audio.play().then(() => {
+          btnPlay.textContent = '⏸ Pausar (P)';
+        }).catch(err => {
+          console.warn("Autoplay bloqueado:", err);
+        });
+      } else {
+        audio.pause();
+        btnPlay.textContent = '▶ Reproducir (P)';
+      }
+    }
+
+    function highlightCurrentSingingLine(currTime) {
+      // Encuentra la última línea sincronizada cuyo tiempo sea <= currTime
+      let currentIdx = -1;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].time !== null && items[i].time <= currTime) {
+          currentIdx = i;
+        }
+      }
+
+      Array.from(linesContainer.children).forEach((row, idx) => {
+        row.classList.toggle('current-singing', idx === currentIdx);
+      });
+    }
+
+    function parseAndApplyLyrics(rawText) {
+      const timeRegex = /\[(\d{1,3}):(\d{2})(?:[.:](\d{1,3}))?\]/;
+      const rawLines = rawText.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+
+      const newItems = [];
+      rawLines.forEach(line => {
+        // Ignorar metadatos [ti:...], [ar:...]
+        if (/^\[(ti|ar|al|by|offset):/i.test(line)) return;
+
+        const match = line.match(timeRegex);
+        if (match) {
+          const mins = parseInt(match[1], 10);
+          const secs = parseInt(match[2], 10);
+          const frac = match[3] ? parseFloat('0.' + match[3]) : 0;
+          const time = Math.round((mins * 60 + secs + frac) * 100) / 100;
+          const cleanText = line.replace(timeRegex, '').trim();
+          newItems.push({ text: cleanText || "♪", time: time });
+        } else {
+          newItems.push({ text: line, time: null });
+        }
+      });
+
+      if (newItems.length > 0) {
+        items = newItems;
+        activeIndex = 0;
+        saveState();
+        renderLines();
+        updateOutputs();
+        updateActivePreview();
+      }
+    }
+
+    function downloadFile(filename, content, type) {
+      const blob = new Blob([content], { type: type });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+    }
+
+    // Iniciar cuando el DOM esté listo
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
