@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#080a14" />
+  <meta name="theme-color" content="#060810" />
   <meta name="description" content="eres mi viernes 13... TE AMO LIZET — Marcos Menchaca" />
   <title>Viernes 13 ✨ — Para Lizet</title>
 
@@ -15,34 +15,85 @@
 
   <!-- Canvas con partículas (Pétalos de girasol y destellos dorados) -->
   <canvas id="canvas-backdrop"></canvas>
-  <div class="ambient-bg" aria-hidden="true"></div>
+  <div class="ambient-fog" aria-hidden="true"></div>
 
   <main class="app-shell">
 
     <!-- ====================================================================
-         ETAPA 1: PANTALLA DE ENTRADA (CLAVE VIERNES13)
+         ETAPA 1: PANTALLA DE ENTRADA (JASON VOORHEES / VIERNES 13)
          ==================================================================== -->
     <section id="stage-login" class="stage is-active" aria-labelledby="login-heading">
-      <div class="glass-card login-card" id="login-card">
+      <div class="glass-card jason-card" id="login-card">
         
-        <div class="login-artwork">
-          <div class="artwork-ring"></div>
-          <img src="img/portada.png" alt="Viernes 13 Girasoles" class="artwork-img" />
+        <!-- Máscara de Hockey SVG estilo Jason Voorhees -->
+        <div class="jason-mask-wrap">
+          <div class="mask-aura"></div>
+          <svg class="jason-mask-svg" viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Base de la Máscara de Hockey -->
+            <path d="M100 16 C48 16, 22 55, 22 118 C22 178, 48 222, 100 226 C152 222, 178 178, 178 118 C178 55, 152 16, 100 16 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="3"/>
+            
+            <!-- Marcas Rojas Triangulares Icónicas de Viernes 13 -->
+            <polygon points="100,50 86,22 114,22" fill="#dc2626"/>
+            <polygon points="38,122 62,112 52,130" fill="#dc2626"/>
+            <polygon points="162,122 138,112 148,130" fill="#dc2626"/>
+            
+            <!-- Remaches de sujeción -->
+            <rect x="14" y="108" width="10" height="18" rx="2" fill="#475569"/>
+            <rect x="176" y="108" width="10" height="18" rx="2" fill="#475569"/>
+            <rect x="94" y="10" width="12" height="8" rx="2" fill="#475569"/>
+            
+            <!-- Cuencas de los ojos (oscuridad con destello romántico) -->
+            <ellipse cx="66" cy="98" rx="18" ry="14" fill="#090d16" stroke="#1e293b" stroke-width="2"/>
+            <ellipse cx="134" cy="98" rx="18" ry="14" fill="#090d16" stroke="#1e293b" stroke-width="2"/>
+            
+            <!-- Resplandor en los ojos -->
+            <circle cx="66" cy="98" r="4" fill="#ff4d6d" style="animation: eyeGlow 2.5s infinite ease-in-out;"/>
+            <circle cx="134" cy="98" r="4" fill="#ff4d6d" style="animation: eyeGlow 2.5s infinite ease-in-out;"/>
+            
+            <!-- Orificios nasales -->
+            <ellipse cx="94" cy="130" rx="3.5" ry="5.5" fill="#1e293b"/>
+            <ellipse cx="106" cy="130" rx="3.5" ry="5.5" fill="#1e293b"/>
+            
+            <!-- Agujeros de ventilación característicos de la máscara -->
+            <circle cx="76" cy="58" r="3" fill="#1e293b"/>
+            <circle cx="100" cy="58" r="3" fill="#1e293b"/>
+            <circle cx="124" cy="58" r="3" fill="#1e293b"/>
+            <circle cx="88" cy="72" r="3" fill="#1e293b"/>
+            <circle cx="112" cy="72" r="3" fill="#1e293b"/>
+            
+            <circle cx="56" cy="148" r="3" fill="#1e293b"/>
+            <circle cx="70" cy="154" r="3" fill="#1e293b"/>
+            <circle cx="85" cy="160" r="3" fill="#1e293b"/>
+            <circle cx="100" cy="162" r="3" fill="#1e293b"/>
+            <circle cx="115" cy="160" r="3" fill="#1e293b"/>
+            <circle cx="130" cy="154" r="3" fill="#1e293b"/>
+            <circle cx="144" cy="148" r="3" fill="#1e293b"/>
+            
+            <circle cx="72" cy="174" r="3" fill="#1e293b"/>
+            <circle cx="86" cy="180" r="3" fill="#1e293b"/>
+            <circle cx="100" cy="182" r="3" fill="#1e293b"/>
+            <circle cx="114" cy="180" r="3" fill="#1e293b"/>
+            <circle cx="128" cy="174" r="3" fill="#1e293b"/>
+            
+            <circle cx="90" cy="200" r="3" fill="#1e293b"/>
+            <circle cx="100" cy="202" r="3" fill="#1e293b"/>
+            <circle cx="110" cy="200" r="3" fill="#1e293b"/>
+          </svg>
         </div>
 
-        <span class="badge-pill">🌻 NUESTRO DÍA DE LA SUERTE</span>
-        <h1 id="login-heading" class="login-title">Viernes 13</h1>
-        <p class="login-subtitle">
-          Dicen que los viernes 13 dan mala suerte... hasta que llegaste tú a cambiarlo todo.
+        <span class="badge-pill jason">🩸 CAMP CRYSTAL LAKE • 13</span>
+        <h1 id="login-heading" class="jason-title">VIERNES 13</h1>
+        <p class="jason-subtitle">
+          Dicen que el viernes 13 es de miedo y maldición... pero contigo se convirtió en <strong>mi mayor bendición</strong>.
         </p>
 
-        <form id="login-form" class="login-form" autocomplete="off">
+        <form id="login-form" class="jason-form" autocomplete="off">
           <div class="password-input-wrap">
             <input
               type="password"
               id="password-input"
               class="password-input"
-              placeholder="Ingresa nuestra clave secreta..."
+              placeholder="Ingresa la clave secreta..."
               required
               autocomplete="current-password"
             />
@@ -56,11 +107,11 @@
 
           <div id="login-error" class="form-error"></div>
 
-          <button type="submit" class="btn-login">
-            <span>Abrir nuestro portal</span> 💖
+          <button type="submit" class="btn-jason-unlock">
+            <span>Desbloquear día de la suerte</span> 🗝️
           </button>
 
-          <p class="login-hint">Pista: el nombre de nuestro día especial (viernes13)</p>
+          <p class="jason-hint">Pista: el nombre de nuestro día especial (viernes13)</p>
         </form>
 
       </div>
@@ -100,13 +151,20 @@
 
 
     <!-- ====================================================================
-         ETAPA 3: REPRODUCTOR MODO SPOTIFY CON LETRA EN VIVO
+         ETAPA 3: REPRODUCTOR MODO SPOTIFY (OPTIMIZADO PC & MÓVIL)
          ==================================================================== -->
     <section id="stage-music" class="stage" aria-labelledby="track-heading">
-      <div class="spotify-layout">
+      
+      <!-- Selector de pestañas para celular -->
+      <div class="mobile-tab-bar" id="mobile-tab-bar">
+        <button type="button" class="tab-btn is-active" id="tab-btn-player">🎵 Reproductor</button>
+        <button type="button" class="tab-btn" id="tab-btn-lyrics">📜 Letra en Vivo</button>
+      </div>
+
+      <div class="spotify-layout view-player" id="spotify-layout">
         
         <!-- PANEL IZQUIERDO: REPRODUCTOR -->
-        <div class="glass-card player-card">
+        <div class="glass-card player-card" id="player-card">
           
           <div class="player-cover-container">
             <div class="player-cover-aura"></div>
@@ -191,13 +249,13 @@
         </div>
 
         <!-- PANEL DERECHO: LETRA SINCRONIZADA ESTILO SPOTIFY -->
-        <div class="glass-card lyrics-card">
+        <div class="glass-card lyrics-card" id="lyrics-card">
           <div class="lyrics-header">
             <div class="lyrics-title-group">
               <span class="badge-pill spotify">LETRA EN VIVO</span>
               <h2>Letras de la canción</h2>
             </div>
-            <span class="lyrics-hint">Toca cualquier verso para escuchar</span>
+            <span class="lyrics-hint">Toca cualquier verso para saltar</span>
           </div>
 
           <!-- Contenedor scrolleable centrado -->
@@ -207,6 +265,26 @@
         </div>
 
       </div>
+
+      <!-- Mini-Player persistente para móvil en vista de letra -->
+      <div class="mobile-mini-player" id="mobile-mini-player">
+        <div class="mini-track-info">
+          <img src="img/portada.png" alt="Viernes 13" class="mini-cover" />
+          <div class="mini-text">
+            <div class="mini-title">Viernes 13</div>
+            <div class="mini-artist">Marcos Menchaca</div>
+          </div>
+        </div>
+        <button type="button" class="mini-play-btn" id="mini-play-btn" aria-label="Reproducir o pausar">
+          <svg id="mini-icon-play" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <svg id="mini-icon-pause" viewBox="0 0 24 24" style="display:none;">
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+          </svg>
+        </button>
+      </div>
+
     </section>
 
 

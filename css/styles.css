@@ -1,29 +1,32 @@
 /* ==========================================================================
-   ESTILOS PRINCIPALES - VIERNES 13 (MODO SPOTIFY ROMÁNTICO)
+   ESTILOS PREMIUM - VIERNES 13 (JASON THEME + SPOTIFY ROMÁNTICO)
    Dedicado a Lizet: "eres mi viernes 13... TE AMO LIZET"
+   100% Optimizado para Celular y PC
    ========================================================================== */
 
 :root {
   color-scheme: dark;
-  --bg-dark: #080a14;
-  --bg-deep: #0c1020;
-  --panel-bg: rgba(16, 22, 42, 0.78);
-  --panel-border: rgba(255, 255, 255, 0.12);
-  --panel-border-glow: rgba(251, 191, 36, 0.35);
+  --bg-main: #060810;
+  --bg-card: rgba(14, 18, 32, 0.88);
+  --border-card: rgba(255, 255, 255, 0.12);
 
-  /* Acentos temáticos: Girasol, Spotify y Amor */
+  /* Jason / Viernes 13 (Rojo sangre & noche) */
+  --jason-red: #ef4444;
+  --jason-dark-red: #991b1b;
+  --jason-glow: rgba(239, 68, 68, 0.45);
+  
+  /* Spotify & Romance (Verde Spotify, Oro Girasol & Rosa Amor) */
   --spotify-green: #1db954;
   --spotify-green-hover: #1ed760;
   --sunflower-gold: #fbbf24;
   --sunflower-amber: #f59e0b;
   --rose-love: #ff4d6d;
-  --rose-glow: rgba(255, 77, 109, 0.4);
 
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
   --text-dim: #64748b;
 
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 *, *::before, *::after {
@@ -35,7 +38,7 @@
 html, body {
   width: 100%;
   min-height: 100%;
-  background-color: var(--bg-dark);
+  background-color: var(--bg-main);
   color: var(--text-main);
   font-family: var(--font-family);
   overflow-x: hidden;
@@ -43,7 +46,7 @@ html, body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Canvas de fondo con partículas interactivas */
+/* Canvas y fondos ambientales */
 #canvas-backdrop {
   position: fixed;
   top: 0;
@@ -54,8 +57,7 @@ html, body {
   pointer-events: none;
 }
 
-/* Fondo decorativo con gradientes suaves */
-.ambient-bg {
+.ambient-fog {
   position: fixed;
   top: 0;
   left: 0;
@@ -63,14 +65,15 @@ html, body {
   height: 100vh;
   z-index: -1;
   background: 
-    radial-gradient(circle at 15% 15%, rgba(245, 158, 11, 0.16) 0%, transparent 45%),
-    radial-gradient(circle at 85% 85%, rgba(29, 185, 84, 0.14) 0%, transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(255, 77, 109, 0.12) 0%, transparent 60%),
-    linear-gradient(180deg, #090c16 0%, #060810 100%);
-  filter: blur(20px);
+    radial-gradient(circle at 10% 20%, rgba(220, 38, 38, 0.15) 0%, transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(29, 185, 84, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.8) 0%, transparent 70%),
+    linear-gradient(180deg, #090c17 0%, #04050a 100%);
+  filter: blur(25px);
+  animation: fogFloat 14s ease-in-out infinite;
 }
 
-/* Shell general */
+/* Shell global */
 .app-shell {
   position: relative;
   z-index: 10;
@@ -79,15 +82,15 @@ html, body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 20px 16px;
+  padding: 24px 16px;
 }
 
 /* Etapas */
 .stage {
   display: none;
   width: 100%;
-  max-width: 1100px;
-  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  max-width: 1120px;
+  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .stage.is-active {
@@ -97,25 +100,21 @@ html, body {
   justify-content: center;
 }
 
-/* Tarjetas de cristal (Glassmorphism) */
+/* Tarjetas Glassmorphism */
 .glass-card {
-  background: var(--panel-bg);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid var(--panel-border);
+  background: var(--bg-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-card);
   border-radius: 24px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 30px rgba(251, 191, 36, 0.08);
-  padding: 36px 30px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 40px rgba(0, 0, 0, 0.4);
+  padding: 34px 28px;
   position: relative;
   overflow: hidden;
   transition: border-color 0.3s ease;
 }
 
-.glass-card:hover {
-  border-color: rgba(251, 191, 36, 0.3);
-}
-
-/* Badges / Píldoras */
+/* Píldoras y Badges */
 .badge-pill {
   display: inline-flex;
   align-items: center;
@@ -123,84 +122,96 @@ html, body {
   padding: 5px 14px;
   border-radius: 999px;
   font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: 800;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  background: rgba(251, 191, 36, 0.15);
-  border: 1px solid rgba(251, 191, 36, 0.35);
-  color: var(--sunflower-gold);
-  margin-bottom: 12px;
+}
+
+.badge-pill.jason {
+  background: rgba(220, 38, 38, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  color: #fca5a5;
+  box-shadow: 0 0 15px rgba(220, 38, 38, 0.25);
 }
 
 .badge-pill.spotify {
-  background: rgba(29, 185, 84, 0.15);
-  border-color: rgba(29, 185, 84, 0.35);
+  background: rgba(29, 185, 84, 0.16);
+  border: 1px solid rgba(29, 185, 84, 0.4);
   color: var(--spotify-green-hover);
 }
 
 .badge-pill.love {
-  background: rgba(255, 77, 109, 0.15);
-  border-color: rgba(255, 77, 109, 0.35);
+  background: rgba(255, 77, 109, 0.16);
+  border: 1px solid rgba(255, 77, 109, 0.45);
   color: var(--rose-love);
 }
 
 /* ==========================================================================
-   ETAPA 1: PANTALLA DE ENTRADA (LOGIN / CLAVE VIERNES13)
+   ETAPA 1: PANTALLA DE ENTRADA JASON VIERNES 13
    ========================================================================== */
-.login-card {
+.jason-card {
   width: 100%;
-  max-width: 460px;
+  max-width: 480px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 45px rgba(220, 38, 38, 0.25);
 }
 
-.login-artwork {
+/* Máscara de Hockey SVG estilo Jason Voorhees */
+.jason-mask-wrap {
   position: relative;
-  width: 130px;
-  height: 130px;
-  margin-bottom: 20px;
+  width: 140px;
+  height: 165px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.artwork-ring {
+.mask-aura {
   position: absolute;
-  inset: -6px;
+  inset: -15px;
   border-radius: 50%;
-  background: conic-gradient(from 0deg, var(--sunflower-gold), var(--rose-love), var(--spotify-green), var(--sunflower-gold));
-  animation: spinSlow 12s linear infinite;
-  filter: blur(4px);
-  opacity: 0.8;
+  background: radial-gradient(circle, rgba(220, 38, 38, 0.5) 0%, rgba(153, 27, 27, 0.25) 50%, transparent 75%);
+  filter: blur(20px);
+  z-index: 1;
+  animation: jasonGlow 4s ease-in-out infinite;
 }
 
-.artwork-img {
+.jason-mask-svg {
   position: relative;
+  z-index: 2;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid #fff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  filter: drop-shadow(0 12px 25px rgba(0, 0, 0, 0.9));
 }
 
-.login-title {
-  font-size: 1.85rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+.jason-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   margin-bottom: 8px;
-  background: linear-gradient(135deg, #fff 30%, var(--sunflower-gold) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: #fff;
+  text-shadow: 0 0 18px rgba(239, 68, 68, 0.8), 0 0 35px rgba(153, 27, 27, 0.6);
+  animation: neonFlicker 6s infinite;
 }
 
-.login-subtitle {
-  font-size: 0.95rem;
+.jason-subtitle {
+  font-size: 0.96rem;
   color: var(--text-muted);
+  line-height: 1.6;
   margin-bottom: 24px;
-  line-height: 1.5;
 }
 
-.login-form {
+.jason-subtitle strong {
+  color: #fff;
+}
+
+.jason-form {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -214,26 +225,26 @@ html, body {
 
 .password-input {
   width: 100%;
-  padding: 14px 48px 14px 18px;
+  padding: 15px 50px 15px 18px;
   border-radius: 14px;
-  background: rgba(0, 0, 0, 0.45);
-  border: 1px solid var(--panel-border);
+  background: rgba(5, 7, 14, 0.85);
+  border: 1px solid rgba(239, 68, 68, 0.4);
   color: #fff;
   font-size: 1.05rem;
   outline: none;
   transition: all 0.25s ease;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 .password-input:focus {
-  border-color: var(--sunflower-gold);
-  box-shadow: 0 0 15px rgba(251, 191, 36, 0.25);
-  background: rgba(0, 0, 0, 0.6);
+  border-color: var(--jason-red);
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 10px rgba(220, 38, 38, 0.2);
+  background: rgba(3, 4, 8, 0.95);
 }
 
 .toggle-pwd-btn {
   position: absolute;
-  right: 12px;
+  right: 14px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
@@ -247,49 +258,51 @@ html, body {
 }
 
 .toggle-pwd-btn:hover {
-  color: #fff;
+  color: var(--jason-red);
 }
 
 .form-error {
-  color: #f87171;
-  font-size: 0.86rem;
+  color: #fca5a5;
+  font-size: 0.88rem;
   margin-top: -6px;
   min-height: 20px;
-  transition: opacity 0.2s ease;
+  font-weight: 500;
 }
 
-.btn-login {
+.btn-jason-unlock {
   width: 100%;
-  padding: 15px;
+  padding: 16px;
   border-radius: 14px;
-  background: linear-gradient(135deg, var(--sunflower-gold) 0%, var(--sunflower-amber) 50%, var(--rose-love) 100%);
-  color: #0b0f19;
+  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  color: #ffffff;
   font-size: 1.05rem;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   border: none;
   cursor: pointer;
-  box-shadow: 0 8px 25px rgba(245, 158, 11, 0.35);
+  box-shadow: 0 8px 30px rgba(220, 38, 38, 0.5);
   transition: all 0.25s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
 }
 
-.btn-login:hover {
+.btn-jason-unlock:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(245, 158, 11, 0.5);
-  filter: brightness(1.08);
+  filter: brightness(1.15);
+  box-shadow: 0 12px 35px rgba(220, 38, 38, 0.7);
 }
 
-.btn-login:active {
+.btn-jason-unlock:active {
   transform: translateY(0);
 }
 
-.login-hint {
+.jason-hint {
   font-size: 0.8rem;
   color: var(--text-dim);
-  margin-top: 8px;
+  margin-top: 6px;
 }
 
 /* ==========================================================================
@@ -311,7 +324,7 @@ html, body {
 }
 
 .welcome-title {
-  font-size: 2.2rem;
+  font-size: 2.1rem;
   font-weight: 800;
   margin-bottom: 14px;
   line-height: 1.25;
@@ -325,18 +338,18 @@ html, body {
   font-size: 1.05rem;
   color: var(--text-muted);
   line-height: 1.7;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .welcome-quote {
   font-style: italic;
-  padding: 14px 18px;
+  padding: 14px 20px;
   border-left: 3px solid var(--sunflower-gold);
   background: rgba(251, 191, 36, 0.08);
   border-radius: 0 12px 12px 0;
   margin-bottom: 26px;
   color: #fff;
-  font-size: 0.95rem;
+  font-size: 0.96rem;
 }
 
 .btn-welcome {
@@ -361,42 +374,78 @@ html, body {
 }
 
 /* ==========================================================================
-   ETAPA 3: REPRODUCTOR MODO SPOTIFY CON LETRA SINCRONIZADA
+   ETAPA 3: REPRODUCTOR SPOTIFY (PC & CELULAR PERFECCIONADO)
    ========================================================================== */
+
+/* Barra de pestañas en Móvil */
+.mobile-tab-bar {
+  display: none;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto 16px;
+  background: rgba(18, 24, 44, 0.85);
+  border: 1px solid var(--border-card);
+  border-radius: 999px;
+  padding: 4px;
+  gap: 6px;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab-btn.is-active {
+  background: var(--spotify-green);
+  color: #000;
+  box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4);
+}
+
+/* Grid Spotify */
 .spotify-layout {
   display: grid;
-  grid-template-columns: 440px 1fr;
-  gap: 28px;
+  grid-template-columns: 430px 1fr;
+  gap: 26px;
   width: 100%;
   max-width: 1100px;
   align-items: stretch;
 }
 
-/* Tarjeta del Reproductor (Izquierda) */
+/* Panel Izquierdo: Reproductor */
 .player-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 22px;
+  gap: 20px;
+  padding: 28px 24px;
 }
 
 .player-cover-container {
   position: relative;
   width: 100%;
+  max-width: 340px;
+  margin: 0 auto;
   aspect-ratio: 1 / 1;
-  border-radius: 18px;
+  border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
 }
 
 .player-cover-aura {
   position: absolute;
   inset: -15px;
-  background: radial-gradient(circle, rgba(251, 191, 36, 0.35) 0%, rgba(29, 185, 84, 0.25) 50%, transparent 70%);
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.35) 0%, rgba(220, 38, 38, 0.25) 50%, transparent 70%);
   filter: blur(25px);
   z-index: 1;
-  opacity: 0.8;
-  transition: opacity 0.5s ease;
+  opacity: 0.85;
 }
 
 .player-cover-img {
@@ -405,15 +454,15 @@ html, body {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 18px;
+  border-radius: 20px;
   transition: transform 0.4s ease;
 }
 
 .player-cover-container:hover .player-cover-img {
-  transform: scale(1.03);
+  transform: scale(1.02);
 }
 
-/* Información de la canción */
+/* Info de la pista */
 .track-header {
   display: flex;
   justify-content: space-between;
@@ -426,19 +475,19 @@ html, body {
 }
 
 .track-title {
-  font-size: 1.6rem;
+  font-size: 1.65rem;
   font-weight: 800;
   color: #fff;
   letter-spacing: -0.01em;
 }
 
 .track-artist {
-  font-size: 1rem;
+  font-size: 1.02rem;
   color: var(--text-muted);
   font-weight: 500;
 }
 
-/* Botón Me Gusta (Corazón interactivo) */
+/* Like Heart Button */
 .like-btn {
   background: none;
   border: none;
@@ -460,24 +509,24 @@ html, body {
   fill: currentColor;
 }
 
-/* Frase especial de amor */
+/* Frase especial */
 .dedication-banner {
-  background: linear-gradient(90deg, rgba(255, 77, 109, 0.16) 0%, rgba(251, 191, 36, 0.16) 100%);
-  border: 1px solid rgba(255, 77, 109, 0.3);
-  padding: 10px 14px;
-  border-radius: 12px;
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.18) 0%, rgba(251, 191, 36, 0.18) 100%);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  padding: 12px 14px;
+  border-radius: 14px;
   text-align: center;
-  font-size: 0.92rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #fff;
-  text-shadow: 0 0 10px rgba(255, 77, 109, 0.5);
+  text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
 
-/* Barra de Progreso Spotify */
+/* Barra de progreso */
 .progress-section {
   display: flex;
   flex-direction: column;
@@ -528,12 +577,12 @@ html, body {
 .time-row {
   display: flex;
   justify-content: space-between;
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
 }
 
-/* Controles de Reproducción */
+/* Controles de reproducción */
 .controls-row {
   display: flex;
   align-items: center;
@@ -563,8 +612,8 @@ html, body {
 }
 
 .ctrl-btn-play {
-  width: 58px;
-  height: 58px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: #fff;
   color: #000;
@@ -573,7 +622,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -581,68 +630,65 @@ html, body {
   background: var(--spotify-green-hover);
   color: #fff;
   transform: scale(1.08);
-  box-shadow: 0 8px 25px rgba(29, 185, 84, 0.5);
+  box-shadow: 0 8px 25px rgba(29, 185, 84, 0.55);
 }
 
 .ctrl-btn-play svg {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   fill: currentColor;
 }
 
-/* Acciones extras */
 .extra-actions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
+  justify-content: center;
 }
 
 .btn-secondary-link {
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--panel-border);
-  color: var(--text-muted);
-  padding: 8px 16px;
+  border: 1px solid var(--border-card);
+  color: var(--text-main);
+  padding: 10px 20px;
   border-radius: 999px;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .btn-secondary-link:hover {
-  background: rgba(255, 255, 255, 0.15);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Tarjeta de Letras Modo Spotify (Derecha) */
+/* Panel Derecho: Letras Spotify */
 .lyrics-card {
   display: flex;
   flex-direction: column;
-  height: 600px;
-  padding: 24px 28px;
+  height: 620px;
+  padding: 26px 28px;
 }
 
 .lyrics-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--panel-border);
+  border-bottom: 1px solid var(--border-card);
 }
 
 .lyrics-title-group h2 {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.3rem;
+  font-weight: 800;
   color: #fff;
 }
 
 .lyrics-hint {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--text-dim);
 }
 
-/* Contenedor scrolleable de letras estilo Spotify */
 .lyrics-viewport {
   flex: 1;
   overflow-y: auto;
@@ -664,9 +710,9 @@ html, body {
   border-radius: 999px;
 }
 
-/* Línea de letra */
+/* Línea de Letra */
 .lyric-line {
-  font-size: 1.28rem;
+  font-size: 1.3rem;
   font-weight: 700;
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.32);
@@ -682,16 +728,85 @@ html, body {
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* Línea activa cantada en ese instante */
 .lyric-line.is-active {
   color: #ffffff;
-  font-size: 1.55rem;
+  font-size: 1.6rem;
   transform: scale(1.03) translateX(6px);
   text-shadow: 0 0 20px rgba(251, 191, 36, 0.7), 0 0 35px rgba(29, 185, 84, 0.5);
 }
 
 .lyric-line.is-passed {
   color: rgba(255, 255, 255, 0.45);
+}
+
+/* Barra Flotante Mini-Player en Móvil para ver letras */
+.mobile-mini-player {
+  display: none;
+  position: fixed;
+  bottom: 14px;
+  left: 14px;
+  right: 14px;
+  z-index: 100;
+  background: rgba(18, 24, 44, 0.95);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--border-card);
+  border-radius: 16px;
+  padding: 8px 14px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mini-track-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.mini-cover {
+  width: 42px;
+  height: 42px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.mini-text {
+  overflow: hidden;
+}
+
+.mini-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mini-artist {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.mini-play-btn {
+  background: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.mini-play-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: #000;
 }
 
 /* ==========================================================================
@@ -704,7 +819,7 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 44px 36px;
+  padding: 44px 34px;
 }
 
 .finale-artwork {
@@ -712,7 +827,7 @@ html, body {
   height: 160px;
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
   margin-bottom: 20px;
   border: 2px solid rgba(251, 191, 36, 0.4);
 }
@@ -735,7 +850,7 @@ html, body {
 .finale-subtitle {
   font-size: 1.15rem;
   color: var(--rose-love);
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.05em;
   margin-bottom: 24px;
 }
@@ -764,7 +879,7 @@ html, body {
 
 .letter-highlight {
   color: var(--sunflower-gold);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .letter-sign {
@@ -807,7 +922,7 @@ html, body {
   padding: 14px 28px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--panel-border);
+  border: 1px solid var(--border-card);
   color: var(--text-main);
   font-size: 1rem;
   font-weight: 600;
@@ -820,41 +935,58 @@ html, body {
 }
 
 /* ==========================================================================
-   RESPONSIVE DESIGN (MÓVILES Y PANTALLAS PEQUEÑAS)
+   OPTIMIZACIÓN MÓVIL Y RESPONSIVE
    ========================================================================== */
 @media (max-width: 900px) {
-  .spotify-layout {
-    grid-template-columns: 1fr;
-    max-width: 520px;
+  .mobile-tab-bar {
+    display: flex;
   }
 
-  .lyrics-card {
-    height: 480px;
-    padding: 20px;
+  .spotify-layout {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    gap: 16px;
+  }
+
+  /* Control de visibilidad de paneles mediante tabs en móvil */
+  .spotify-layout.view-player .lyrics-card {
+    display: none;
+  }
+
+  .spotify-layout.view-player .player-card {
+    display: flex;
+  }
+
+  .spotify-layout.view-lyrics .player-card {
+    display: none;
+  }
+
+  .spotify-layout.view-lyrics .lyrics-card {
+    display: flex;
+    height: calc(100vh - 160px);
+    padding: 18px 20px 80px;
+  }
+
+  .spotify-layout.view-lyrics ~ .mobile-mini-player {
+    display: flex;
   }
 
   .player-cover-container {
-    max-width: 320px;
-    margin: 0 auto;
-  }
-
-  .track-header {
-    text-align: center;
-    flex-direction: column;
+    max-width: 280px;
   }
 
   .lyric-line {
-    font-size: 1.15rem;
+    font-size: 1.18rem;
   }
 
   .lyric-line.is-active {
-    font-size: 1.35rem;
+    font-size: 1.45rem;
   }
 }
 
 @media (max-width: 480px) {
   .app-shell {
-    padding: 16px 10px;
+    padding: 14px 10px;
   }
 
   .glass-card {
@@ -862,19 +994,19 @@ html, body {
     border-radius: 20px;
   }
 
-  .login-title {
-    font-size: 1.55rem;
+  .jason-title {
+    font-size: 1.85rem;
   }
 
   .welcome-title {
-    font-size: 1.75rem;
+    font-size: 1.7rem;
   }
 
   .track-title {
-    font-size: 1.35rem;
+    font-size: 1.4rem;
   }
 
-  .lyrics-card {
-    height: 420px;
+  .player-cover-container {
+    max-width: 240px;
   }
 }

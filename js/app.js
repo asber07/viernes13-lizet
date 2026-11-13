@@ -1,7 +1,7 @@
 /**
- * APLICACIÓN PRINCIPAL - VIERNES 13 (MODO SPOTIFY)
+ * APLICACIÓN PRINCIPAL - VIERNES 13 (JASON THEME + MODO SPOTIFY)
  * Dedicado a Lizet: "eres mi viernes 13... TE AMO LIZET"
- * Compatible 100% con GitHub Pages y ejecución local.
+ * Compatible 100% con GitHub Pages, Celular y PC.
  */
 
 // Letra sincronizada oficial (37 versos con marcas exactas de tiempo de letra.lrc)
@@ -94,6 +94,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const lyricsViewport = document.getElementById("lyrics-viewport");
   const toFinaleBtn = document.getElementById("to-finale-btn");
 
+  // Tabs móviles
+  const tabBtnPlayer = document.getElementById("tab-btn-player");
+  const tabBtnLyrics = document.getElementById("tab-btn-lyrics");
+  const spotifyLayout = document.getElementById("spotify-layout");
+
+  // Mini Player móvil
+  const miniPlayBtn = document.getElementById("mini-play-btn");
+  const miniIconPlay = document.getElementById("mini-icon-play");
+  const miniIconPause = document.getElementById("mini-icon-pause");
+
   // Finale
   const btnReplaySong = document.getElementById("btn-replay-song");
   const btnRestartApp = document.getElementById("btn-restart-app");
@@ -111,6 +121,33 @@ document.addEventListener("DOMContentLoaded", () => {
       target.classList.add("is-active");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
+  }
+
+  // ==========================================
+  // TABS MÓVILES (REPRODUCTOR vs LETRA)
+  // ==========================================
+  if (tabBtnPlayer && tabBtnLyrics && spotifyLayout) {
+    tabBtnPlayer.addEventListener("click", () => {
+      tabBtnPlayer.classList.add("is-active");
+      tabBtnLyrics.classList.remove("is-active");
+      spotifyLayout.classList.remove("view-lyrics");
+      spotifyLayout.classList.add("view-player");
+    });
+
+    tabBtnLyrics.addEventListener("click", () => {
+      tabBtnLyrics.classList.add("is-active");
+      tabBtnPlayer.classList.remove("is-active");
+      spotifyLayout.classList.remove("view-player");
+      spotifyLayout.classList.add("view-lyrics");
+
+      // Centrar de inmediato la frase actual
+      setTimeout(() => {
+        const activeLine = lyricsViewport.querySelector(".lyric-line.is-active");
+        if (activeLine) {
+          activeLine.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 100);
+    });
   }
 
   // ==========================================
@@ -137,7 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupAudioSources();
 
   // ==========================================
-  // 1. PANTALLA DE ENTRADA (LOGIN)
+  // 1. PANTALLA DE ENTRADA JASON (LOGIN)
   // ==========================================
   togglePwdBtn.addEventListener("click", () => {
     const isPass = passwordInput.type === "password";
@@ -152,11 +189,9 @@ document.addEventListener("DOMContentLoaded", () => {
     // Contraseña requerida: viernes13
     if (val === "viernes13") {
       loginError.textContent = "";
-      passwordInput.classList.remove("has-error");
       goToStage("stage-welcome");
     } else {
       loginError.textContent = "Contraseña incorrecta. Pista: nuestro día especial";
-      passwordInput.classList.add("has-error");
       
       const card = document.getElementById("login-card");
       card.style.animation = "shakeError 0.45s ease";
@@ -186,20 +221,33 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isPlaying) {
       playIcon.style.display = "none";
       pauseIcon.style.display = "block";
+      if (miniIconPlay && miniIconPause) {
+        miniIconPlay.style.display = "none";
+        miniIconPause.style.display = "block";
+      }
     } else {
       playIcon.style.display = "block";
       pauseIcon.style.display = "none";
+      if (miniIconPlay && miniIconPause) {
+        miniIconPlay.style.display = "block";
+        miniIconPause.style.display = "none";
+      }
     }
   }
 
-  playBtn.addEventListener("click", () => {
+  function togglePlay() {
     if (audio.paused) {
       audio.play().then(() => updatePlayPauseUI(true));
     } else {
       audio.pause();
       updatePlayPauseUI(false);
     }
-  });
+  }
+
+  playBtn.addEventListener("click", togglePlay);
+  if (miniPlayBtn) {
+    miniPlayBtn.addEventListener("click", togglePlay);
+  }
 
   rewindBtn.addEventListener("click", () => {
     audio.currentTime = Math.max(0, audio.currentTime - 10);
@@ -312,7 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (idx === activeLyricIndex) {
           el.classList.add("is-active");
-          // Centrar automáticamente en el contenedor de letras (efecto Spotify)
+          // Centrado suave en el viewport
           el.scrollIntoView({ behavior: "smooth", block: "center" });
         }
       });
@@ -382,12 +430,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (e.code === "Space") {
       e.preventDefault();
-      if (!audio.paused) {
-        audio.pause();
-        updatePlayPauseUI(false);
-      } else {
-        audio.play().then(() => updatePlayPauseUI(true));
-      }
+      togglePlay();
     } else if (e.code === "ArrowLeft") {
       audio.currentTime = Math.max(0, audio.currentTime - 5);
     } else if (e.code === "ArrowRight") {
@@ -409,7 +452,7 @@ function formatDuration(sec) {
 // EFECTO CONFETI DE CORAZONES ROMÁNTICOS
 // ==========================================================================
 function triggerHeartConfetti() {
-  const count = 18;
+  const count = 20;
   for (let i = 0; i < count; i++) {
     const heart = document.createElement("div");
     heart.innerHTML = Math.random() > 0.4 ? "❤️" : (Math.random() > 0.5 ? "🌻" : "💖");
@@ -438,7 +481,7 @@ function triggerHeartConfetti() {
 }
 
 // ==========================================================================
-// CANVAS DE FONDO: PÉTALOS DE GIRASOL Y DESTELLOS DORADOS
+// CANVAS DE FONDO: PÉTALOS DE GIRASOL, DESTELLOS Y BRUMA ROJA
 // ==========================================================================
 function initCanvasParticles() {
   const canvas = document.getElementById("canvas-backdrop");
@@ -467,7 +510,7 @@ function initCanvasParticles() {
       spin: (Math.random() - 0.5) * 0.04,
       isPetal: i % 2 === 0,
       opacity: 0.2 + Math.random() * 0.5,
-      hue: Math.random() > 0.3 ? 42 : 350 // Oro de girasol y carmesí suave
+      hue: Math.random() > 0.4 ? 42 : 355 // Oro cálido y rojo sangre sutil
     });
   }
 
@@ -490,16 +533,16 @@ function initCanvasParticles() {
       ctx.globalAlpha = p.opacity;
 
       if (p.isPetal) {
-        // Pétalo de girasol estilizado
+        // Pétalo de girasol
         ctx.fillStyle = `hsl(${p.hue}, 95%, 60%)`;
         ctx.beginPath();
         ctx.ellipse(0, 0, p.size, p.size * 0.45, 0, 0, Math.PI * 2);
         ctx.fill();
       } else {
-        // Destello dorado suave
+        // Destello dorado/carmesí
         ctx.fillStyle = "#ffffff";
         ctx.shadowBlur = 8;
-        ctx.shadowColor = "#fbbf24";
+        ctx.shadowColor = p.hue === 42 ? "#fbbf24" : "#ef4444";
         ctx.beginPath();
         ctx.arc(0, 0, p.size * 0.25, 0, Math.PI * 2);
         ctx.fill();
