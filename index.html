@@ -3,9 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#060810" />
+  <meta name="theme-color" content="#05070e" />
   <meta name="description" content="eres mi viernes 13... TE AMO LIZET — Marcos Menchaca" />
   <title>Viernes 13 ✨ — Para Lizet</title>
+
+  <!-- Google Fonts para tipografía de lujo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- Hojas de estilo -->
   <link rel="stylesheet" href="css/animations.css" />
@@ -13,9 +18,10 @@
 </head>
 <body>
 
-  <!-- Canvas con partículas (Pétalos de girasol y destellos dorados) -->
+  <!-- Canvas con partículas (Pétalos de girasol, brasas de fogata y destellos dorados) -->
   <canvas id="canvas-backdrop"></canvas>
   <div class="ambient-fog" aria-hidden="true"></div>
+  <div class="forest-silhouette" aria-hidden="true"></div>
 
   <main class="app-shell">
 
@@ -25,36 +31,54 @@
     <section id="stage-login" class="stage is-active" aria-labelledby="login-heading">
       <div class="glass-card jason-card" id="login-card">
         
-        <!-- Máscara de Hockey SVG estilo Jason Voorhees -->
+        <!-- Máscara de Hockey SVG con beso de labial romántico -->
         <div class="jason-mask-wrap">
           <div class="mask-aura"></div>
           <svg class="jason-mask-svg" viewBox="0 0 200 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="maskGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f1f5f9"/>
+                <stop offset="50%" stop-color="#cbd5e1"/>
+                <stop offset="100%" stop-color="#94a3b8"/>
+              </linearGradient>
+              <radialGradient id="eyeGlowGrad" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#ff2a51" stop-opacity="1"/>
+                <stop offset="100%" stop-color="#991b1b" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+
             <!-- Base de la Máscara de Hockey -->
-            <path d="M100 16 C48 16, 22 55, 22 118 C22 178, 48 222, 100 226 C152 222, 178 178, 178 118 C178 55, 152 16, 100 16 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="3"/>
+            <path d="M100 16 C48 16, 22 55, 22 118 C22 178, 48 222, 100 226 C152 222, 178 178, 178 118 C178 55, 152 16, 100 16 Z" fill="url(#maskGrad)" stroke="#64748b" stroke-width="2.5"/>
             
             <!-- Marcas Rojas Triangulares Icónicas de Viernes 13 -->
             <polygon points="100,50 86,22 114,22" fill="#dc2626"/>
             <polygon points="38,122 62,112 52,130" fill="#dc2626"/>
             <polygon points="162,122 138,112 148,130" fill="#dc2626"/>
+
+            <!-- Beso de labial en la mejilla ("la que me mancha de labial") -->
+            <g transform="translate(130, 142) rotate(-15) scale(0.65)" opacity="0.92">
+              <path d="M10,8 C14,2 22,2 26,8 C30,2 38,2 42,8 C36,16 16,16 10,8 Z" fill="#e11d48"/>
+              <path d="M14,11 C20,13 32,13 38,11 C34,18 18,18 14,11 Z" fill="#be123c"/>
+            </g>
             
-            <!-- Remaches de sujeción -->
-            <rect x="14" y="108" width="10" height="18" rx="2" fill="#475569"/>
-            <rect x="176" y="108" width="10" height="18" rx="2" fill="#475569"/>
-            <rect x="94" y="10" width="12" height="8" rx="2" fill="#475569"/>
+            <!-- Correas y remaches -->
+            <rect x="14" y="108" width="10" height="18" rx="2" fill="#334155"/>
+            <rect x="176" y="108" width="10" height="18" rx="2" fill="#334155"/>
+            <rect x="94" y="10" width="12" height="8" rx="2" fill="#334155"/>
             
-            <!-- Cuencas de los ojos (oscuridad con destello romántico) -->
-            <ellipse cx="66" cy="98" rx="18" ry="14" fill="#090d16" stroke="#1e293b" stroke-width="2"/>
-            <ellipse cx="134" cy="98" rx="18" ry="14" fill="#090d16" stroke="#1e293b" stroke-width="2"/>
+            <!-- Cuencas de los ojos (oscuridad profunda) -->
+            <ellipse cx="66" cy="98" rx="18" ry="14" fill="#090d16" stroke="#0f172a" stroke-width="2"/>
+            <ellipse cx="134" cy="98" rx="18" ry="14" fill="#090d16" stroke="#0f172a" stroke-width="2"/>
             
-            <!-- Resplandor en los ojos -->
-            <circle cx="66" cy="98" r="4" fill="#ff4d6d" style="animation: eyeGlow 2.5s infinite ease-in-out;"/>
-            <circle cx="134" cy="98" r="4" fill="#ff4d6d" style="animation: eyeGlow 2.5s infinite ease-in-out;"/>
+            <!-- Resplandor carmesí en los ojos -->
+            <circle cx="66" cy="98" r="4.5" fill="#ff2a51" style="animation: eyeGlow 2.5s infinite ease-in-out;"/>
+            <circle cx="134" cy="98" r="4.5" fill="#ff2a51" style="animation: eyeGlow 2.5s infinite ease-in-out;"/>
             
             <!-- Orificios nasales -->
             <ellipse cx="94" cy="130" rx="3.5" ry="5.5" fill="#1e293b"/>
             <ellipse cx="106" cy="130" rx="3.5" ry="5.5" fill="#1e293b"/>
             
-            <!-- Agujeros de ventilación característicos de la máscara -->
+            <!-- Agujeros de ventilación de la máscara -->
             <circle cx="76" cy="58" r="3" fill="#1e293b"/>
             <circle cx="100" cy="58" r="3" fill="#1e293b"/>
             <circle cx="124" cy="58" r="3" fill="#1e293b"/>
@@ -66,7 +90,6 @@
             <circle cx="85" cy="160" r="3" fill="#1e293b"/>
             <circle cx="100" cy="162" r="3" fill="#1e293b"/>
             <circle cx="115" cy="160" r="3" fill="#1e293b"/>
-            <circle cx="130" cy="154" r="3" fill="#1e293b"/>
             <circle cx="144" cy="148" r="3" fill="#1e293b"/>
             
             <circle cx="72" cy="174" r="3" fill="#1e293b"/>
@@ -175,7 +198,7 @@
             <div class="track-details">
               <span class="badge-pill spotify">MODO SPOTIFY</span>
               <h2 id="track-heading" class="track-title">Viernes 13</h2>
-              <p class="track-artist">Marcos Menchaca</p>
+              <p class="track-artist">Marcos Menchaca <span style="color:#38bdf8; font-size:0.9rem;" title="Artista Verificado">✓</span></p>
             </div>
             
             <!-- Botón Me Gusta interactivo -->
@@ -188,7 +211,7 @@
 
           <!-- Mensaje dedicado especial -->
           <div class="dedication-banner">
-            <span>eres mi viernes 13... TE AMO LIZET</span> 🌻
+            <span>eres mi viernes 13... TE AMO LIZET</span> 🌻🩸
           </div>
 
           <!-- Barra de Progreso Spotify -->
@@ -298,7 +321,7 @@
           <img src="img/portada.png" alt="Para Lizet con todo mi amor" />
         </div>
 
-        <span class="badge-pill love">PARA TODA LA VIDA</span>
+        <span class="badge-pill love">PARA TODA LA VIDA • NUESTRO VIERNES 13</span>
         <h2 id="finale-heading" class="finale-title">eres mi viernes 13...</h2>
         <p class="finale-subtitle">TE AMO LIZET 🌻💖</p>
 
@@ -310,16 +333,16 @@
             Desde el instante en que llegaste a mi vida entendí que la verdadera suerte existe. Mucha gente dice que el viernes 13 es un día de misterio y temores, pero para mí es el recordatorio más hermoso de que en ti encontré todo lo que siempre soñé.
           </p>
           <p>
-            <span class="letter-highlight">Tú tienes todo lo que busco</span>, y conocerte es todo un gusto que agradezco cada día. Tienes algo en particular, algo que no entiendo del todo pero que no me para de enamorar: tu sonrisa sincera, tus miradas que no mienten y esa paz tan inmensa que siento cuando estoy a tu lado.
+            <span class="letter-highlight">Tú tienes todo lo que busco</span>, y conocerte es todo un gusto que agradezco cada día. Tienes algo en particular, algo que no entiendo del todo pero que no me para de enamorar: tu sonrisa sincera, tus miradas que no mienten, tus abrazos donde me siento en paz y esa ternura tan tuya, <span class="letter-highlight">la que me mancha de labial</span>.
           </p>
           <p>
             Yo sé que te lo he dicho mil veces, pero te lo repito hoy, mañana y siempre: nadie te va a querer como yo lo voy a hacer. No ocupo de nadie más; si la vida me diera a escoger mil veces más, <span class="letter-highlight">te escojo a ti, otra vez</span>.
           </p>
           <p>
-            Gracias por poner luz, alegría y tanta buena suerte en cada uno de mis días.
+            Gracias por poner luz, alegría y tanta buena suerte en cada uno de mis días. Eres mi refugio, mi mejor casualidad y mi persona favorita.
           </p>
           <p class="letter-sign">
-            Con todo mi amor para ti, Lizet. Siempre tuyo. ✨
+            Con todo mi amor para ti, Lizet. Siempre tuyo. ✨🌻
           </p>
         </article>
 

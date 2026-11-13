@@ -6,16 +6,19 @@
 
 :root {
   color-scheme: dark;
-  --bg-main: #060810;
-  --bg-card: rgba(14, 18, 32, 0.88);
-  --border-card: rgba(255, 255, 255, 0.12);
+  --bg-main: #05070e;
+  --bg-deep: #080b16;
+  --card-bg: rgba(12, 16, 28, 0.82);
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-glow: rgba(225, 29, 72, 0.16);
 
-  /* Jason / Viernes 13 (Rojo sangre & noche) */
-  --jason-red: #ef4444;
-  --jason-dark-red: #991b1b;
-  --jason-glow: rgba(239, 68, 68, 0.45);
-  
-  /* Spotify & Romance (Verde Spotify, Oro Girasol & Rosa Amor) */
+  /* Jason / Viernes 13 */
+  --jason-red: #ff2a51;
+  --jason-crimson: #e11d48;
+  --jason-blood: #991b1b;
+  --jason-glow: rgba(255, 42, 81, 0.45);
+
+  /* Spotify & Girasoles */
   --spotify-green: #1db954;
   --spotify-green-hover: #1ed760;
   --sunflower-gold: #fbbf24;
@@ -26,7 +29,8 @@
   --text-muted: #94a3b8;
   --text-dim: #64748b;
 
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-heading: 'Montserrat', sans-serif;
 }
 
 *, *::before, *::after {
@@ -40,13 +44,13 @@ html, body {
   min-height: 100%;
   background-color: var(--bg-main);
   color: var(--text-main);
-  font-family: var(--font-family);
+  font-family: var(--font-main);
   overflow-x: hidden;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Canvas y fondos ambientales */
+/* Canvas de partículas interactivas */
 #canvas-backdrop {
   position: fixed;
   top: 0;
@@ -57,6 +61,7 @@ html, body {
   pointer-events: none;
 }
 
+/* Fondo atmosférico de Camp Crystal Lake (Bruma, luna de sangre y noche) */
 .ambient-fog {
   position: fixed;
   top: 0;
@@ -65,15 +70,27 @@ html, body {
   height: 100vh;
   z-index: -1;
   background: 
-    radial-gradient(circle at 10% 20%, rgba(220, 38, 38, 0.15) 0%, transparent 45%),
-    radial-gradient(circle at 85% 80%, rgba(29, 185, 84, 0.12) 0%, transparent 45%),
-    radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0.8) 0%, transparent 70%),
+    radial-gradient(circle at 12% 18%, rgba(225, 29, 72, 0.2) 0%, transparent 45%),
+    radial-gradient(circle at 88% 82%, rgba(245, 158, 11, 0.15) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(29, 185, 84, 0.08) 0%, transparent 65%),
     linear-gradient(180deg, #090c17 0%, #04050a 100%);
-  filter: blur(25px);
-  animation: fogFloat 14s ease-in-out infinite;
+  filter: blur(20px);
+  animation: fogDrift 16s ease-in-out infinite;
 }
 
-/* Shell global */
+/* Silueta sutil de bosque nocturno en la parte inferior */
+.forest-silhouette {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100vw;
+  height: 90px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Contenedor principal */
 .app-shell {
   position: relative;
   z-index: 10;
@@ -89,8 +106,8 @@ html, body {
 .stage {
   display: none;
   width: 100%;
-  max-width: 1120px;
-  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  max-width: 1140px;
+  animation: fadeIn 0.55s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .stage.is-active {
@@ -100,25 +117,25 @@ html, body {
   justify-content: center;
 }
 
-/* Tarjetas Glassmorphism */
+/* Tarjetas Glassmorphism de alta definición */
 .glass-card {
-  background: var(--bg-card);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid var(--border-card);
-  border-radius: 24px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 40px rgba(0, 0, 0, 0.4);
+  background: var(--card-bg);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--card-border);
+  border-radius: 26px;
+  box-shadow: 0 25px 65px rgba(0, 0, 0, 0.75), 0 0 40px var(--card-glow);
   padding: 34px 28px;
   position: relative;
   overflow: hidden;
-  transition: border-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-/* Píldoras y Badges */
+/* Píldoras e insignias */
 .badge-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   padding: 5px 14px;
   border-radius: 999px;
   font-size: 0.78rem;
@@ -128,20 +145,21 @@ html, body {
 }
 
 .badge-pill.jason {
-  background: rgba(220, 38, 38, 0.18);
-  border: 1px solid rgba(239, 68, 68, 0.45);
+  background: rgba(225, 29, 72, 0.18);
+  border: 1px solid rgba(255, 42, 81, 0.45);
   color: #fca5a5;
-  box-shadow: 0 0 15px rgba(220, 38, 38, 0.25);
+  box-shadow: 0 0 16px rgba(225, 29, 72, 0.3);
 }
 
 .badge-pill.spotify {
-  background: rgba(29, 185, 84, 0.16);
-  border: 1px solid rgba(29, 185, 84, 0.4);
+  background: rgba(29, 185, 84, 0.18);
+  border: 1px solid rgba(29, 185, 84, 0.45);
   color: var(--spotify-green-hover);
+  box-shadow: 0 0 16px rgba(29, 185, 84, 0.25);
 }
 
 .badge-pill.love {
-  background: rgba(255, 77, 109, 0.16);
+  background: rgba(255, 77, 109, 0.18);
   border: 1px solid rgba(255, 77, 109, 0.45);
   color: var(--rose-love);
 }
@@ -156,15 +174,15 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid rgba(239, 68, 68, 0.35);
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 45px rgba(220, 38, 38, 0.25);
+  border: 1px solid rgba(255, 42, 81, 0.35);
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 45px rgba(225, 29, 72, 0.3);
 }
 
-/* Máscara de Hockey SVG estilo Jason Voorhees */
+/* Máscara de Hockey SVG con beso de labial romántico */
 .jason-mask-wrap {
   position: relative;
-  width: 140px;
-  height: 165px;
+  width: 155px;
+  height: 185px;
   margin: 0 auto 16px;
   display: flex;
   align-items: center;
@@ -175,10 +193,10 @@ html, body {
   position: absolute;
   inset: -15px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(220, 38, 38, 0.5) 0%, rgba(153, 27, 27, 0.25) 50%, transparent 75%);
-  filter: blur(20px);
+  background: radial-gradient(circle, rgba(225, 29, 72, 0.55) 0%, rgba(153, 27, 27, 0.3) 50%, transparent 75%);
+  filter: blur(24px);
   z-index: 1;
-  animation: jasonGlow 4s ease-in-out infinite;
+  animation: jasonMaskAura 4s ease-in-out infinite;
 }
 
 .jason-mask-svg {
@@ -186,22 +204,23 @@ html, body {
   z-index: 2;
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 12px 25px rgba(0, 0, 0, 0.9));
+  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.9));
 }
 
 .jason-title {
-  font-size: 2.2rem;
+  font-family: var(--font-heading);
+  font-size: 2.3rem;
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 8px;
   color: #fff;
-  text-shadow: 0 0 18px rgba(239, 68, 68, 0.8), 0 0 35px rgba(153, 27, 27, 0.6);
+  text-shadow: 0 0 18px rgba(255, 42, 81, 0.85), 0 0 35px rgba(153, 27, 27, 0.6);
   animation: neonFlicker 6s infinite;
 }
 
 .jason-subtitle {
-  font-size: 0.96rem;
+  font-size: 0.98rem;
   color: var(--text-muted);
   line-height: 1.6;
   margin-bottom: 24px;
@@ -209,6 +228,7 @@ html, body {
 
 .jason-subtitle strong {
   color: #fff;
+  text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
 }
 
 .jason-form {
@@ -225,21 +245,22 @@ html, body {
 
 .password-input {
   width: 100%;
-  padding: 15px 50px 15px 18px;
+  padding: 16px 52px 16px 18px;
   border-radius: 14px;
-  background: rgba(5, 7, 14, 0.85);
-  border: 1px solid rgba(239, 68, 68, 0.4);
+  background: rgba(5, 7, 14, 0.88);
+  border: 1px solid rgba(255, 42, 81, 0.4);
   color: #fff;
   font-size: 1.05rem;
+  font-family: inherit;
   outline: none;
   transition: all 0.25s ease;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.05em;
 }
 
 .password-input:focus {
   border-color: var(--jason-red);
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.4), inset 0 0 10px rgba(220, 38, 38, 0.2);
-  background: rgba(3, 4, 8, 0.95);
+  box-shadow: 0 0 22px rgba(255, 42, 81, 0.45), inset 0 0 10px rgba(225, 29, 72, 0.2);
+  background: rgba(3, 4, 8, 0.96);
 }
 
 .toggle-pwd-btn {
@@ -255,6 +276,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: color 0.2s ease;
 }
 
 .toggle-pwd-btn:hover {
@@ -263,17 +285,17 @@ html, body {
 
 .form-error {
   color: #fca5a5;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   margin-top: -6px;
   min-height: 20px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .btn-jason-unlock {
   width: 100%;
   padding: 16px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+  background: linear-gradient(135deg, #e11d48 0%, #991b1b 100%);
   color: #ffffff;
   font-size: 1.05rem;
   font-weight: 800;
@@ -281,7 +303,7 @@ html, body {
   text-transform: uppercase;
   border: none;
   cursor: pointer;
-  box-shadow: 0 8px 30px rgba(220, 38, 38, 0.5);
+  box-shadow: 0 8px 30px rgba(225, 29, 72, 0.5);
   transition: all 0.25s ease;
   display: flex;
   align-items: center;
@@ -292,7 +314,7 @@ html, body {
 .btn-jason-unlock:hover {
   transform: translateY(-2px);
   filter: brightness(1.15);
-  box-shadow: 0 12px 35px rgba(220, 38, 38, 0.7);
+  box-shadow: 0 12px 35px rgba(255, 42, 81, 0.7);
 }
 
 .btn-jason-unlock:active {
@@ -300,7 +322,7 @@ html, body {
 }
 
 .jason-hint {
-  font-size: 0.8rem;
+  font-size: 0.82rem;
   color: var(--text-dim);
   margin-top: 6px;
 }
@@ -318,13 +340,14 @@ html, body {
 }
 
 .welcome-sunflower-icon {
-  font-size: 3.5rem;
+  font-size: 3.8rem;
   margin-bottom: 12px;
   animation: floatGentle 4s ease-in-out infinite;
 }
 
 .welcome-title {
-  font-size: 2.1rem;
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
   font-weight: 800;
   margin-bottom: 14px;
   line-height: 1.25;
@@ -335,7 +358,7 @@ html, body {
 }
 
 .welcome-text {
-  font-size: 1.05rem;
+  font-size: 1.08rem;
   color: var(--text-muted);
   line-height: 1.7;
   margin-bottom: 24px;
@@ -343,25 +366,25 @@ html, body {
 
 .welcome-quote {
   font-style: italic;
-  padding: 14px 20px;
+  padding: 16px 22px;
   border-left: 3px solid var(--sunflower-gold);
   background: rgba(251, 191, 36, 0.08);
-  border-radius: 0 12px 12px 0;
-  margin-bottom: 26px;
+  border-radius: 0 14px 14px 0;
+  margin-bottom: 28px;
   color: #fff;
-  font-size: 0.96rem;
+  font-size: 0.98rem;
 }
 
 .btn-welcome {
-  padding: 16px 36px;
+  padding: 16px 38px;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--spotify-green) 0%, var(--spotify-green-hover) 100%);
   color: #041208;
-  font-size: 1.1rem;
+  font-size: 1.12rem;
   font-weight: 700;
   border: none;
   cursor: pointer;
-  box-shadow: 0 8px 30px rgba(29, 185, 84, 0.4);
+  box-shadow: 0 8px 30px rgba(29, 185, 84, 0.45);
   transition: all 0.25s ease;
   display: inline-flex;
   align-items: center;
@@ -370,7 +393,7 @@ html, body {
 
 .btn-welcome:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 12px 35px rgba(29, 185, 84, 0.55);
+  box-shadow: 0 14px 40px rgba(29, 185, 84, 0.6);
 }
 
 /* ==========================================================================
@@ -383,10 +406,10 @@ html, body {
   width: 100%;
   max-width: 440px;
   margin: 0 auto 16px;
-  background: rgba(18, 24, 44, 0.85);
-  border: 1px solid var(--border-card);
+  background: rgba(18, 24, 44, 0.88);
+  border: 1px solid var(--card-border);
   border-radius: 999px;
-  padding: 4px;
+  padding: 5px;
   gap: 6px;
 }
 
@@ -397,7 +420,7 @@ html, body {
   background: transparent;
   border: none;
   color: var(--text-muted);
-  font-size: 0.92rem;
+  font-size: 0.94rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -409,13 +432,13 @@ html, body {
   box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4);
 }
 
-/* Grid Spotify */
+/* Layout Spotify Dual Grid */
 .spotify-layout {
   display: grid;
-  grid-template-columns: 430px 1fr;
-  gap: 26px;
+  grid-template-columns: 440px 1fr;
+  gap: 28px;
   width: 100%;
-  max-width: 1100px;
+  max-width: 1120px;
   align-items: stretch;
 }
 
@@ -424,26 +447,26 @@ html, body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 20px;
-  padding: 28px 24px;
+  gap: 22px;
+  padding: 30px 26px;
 }
 
 .player-cover-container {
   position: relative;
   width: 100%;
-  max-width: 340px;
+  max-width: 330px;
   margin: 0 auto;
   aspect-ratio: 1 / 1;
   border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
 }
 
 .player-cover-aura {
   position: absolute;
-  inset: -15px;
-  background: radial-gradient(circle, rgba(251, 191, 36, 0.35) 0%, rgba(220, 38, 38, 0.25) 50%, transparent 70%);
-  filter: blur(25px);
+  inset: -18px;
+  border-radius: 24px;
+  background: radial-gradient(circle, rgba(251, 191, 36, 0.35) 0%, rgba(225, 29, 72, 0.28) 55%, transparent 75%);
+  filter: blur(28px);
   z-index: 1;
   opacity: 0.85;
 }
@@ -455,11 +478,12 @@ html, body {
   height: 100%;
   object-fit: cover;
   border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   transition: transform 0.4s ease;
 }
 
 .player-cover-container:hover .player-cover-img {
-  transform: scale(1.02);
+  transform: scale(1.025);
 }
 
 /* Info de la pista */
@@ -475,14 +499,15 @@ html, body {
 }
 
 .track-title {
-  font-size: 1.65rem;
+  font-family: var(--font-heading);
+  font-size: 1.7rem;
   font-weight: 800;
   color: #fff;
   letter-spacing: -0.01em;
 }
 
 .track-artist {
-  font-size: 1.02rem;
+  font-size: 1.05rem;
   color: var(--text-muted);
   font-weight: 500;
 }
@@ -499,34 +524,35 @@ html, body {
 
 .like-btn.is-liked {
   color: var(--rose-love);
-  transform: scale(1.2);
+  transform: scale(1.25);
   animation: heartbeat 1.2s infinite;
 }
 
 .like-btn svg {
-  width: 28px;
-  height: 28px;
+  width: 30px;
+  height: 30px;
   fill: currentColor;
 }
 
-/* Frase especial */
+/* Frase especial dedicada con borde animado */
 .dedication-banner {
-  background: linear-gradient(90deg, rgba(239, 68, 68, 0.18) 0%, rgba(251, 191, 36, 0.18) 100%);
-  border: 1px solid rgba(239, 68, 68, 0.35);
-  padding: 12px 14px;
+  background: linear-gradient(90deg, rgba(225, 29, 72, 0.2) 0%, rgba(251, 191, 36, 0.2) 100%);
+  border: 1px solid rgba(255, 42, 81, 0.4);
+  padding: 12px 16px;
   border-radius: 14px;
   text-align: center;
-  font-size: 0.95rem;
-  font-weight: 700;
+  font-size: 0.98rem;
+  font-weight: 800;
   color: #fff;
-  text-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+  text-shadow: 0 0 12px rgba(255, 42, 81, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  animation: bannerGlow 4s ease-in-out infinite;
 }
 
-/* Barra de progreso */
+/* Barra de progreso Spotify */
 .progress-section {
   display: flex;
   flex-direction: column;
@@ -537,7 +563,7 @@ html, body {
   position: relative;
   width: 100%;
   height: 6px;
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.16);
   border-radius: 999px;
   cursor: pointer;
 }
@@ -552,7 +578,7 @@ html, body {
   left: 0;
   height: 100%;
   width: 0%;
-  background: linear-gradient(90deg, var(--spotify-green) 0%, var(--sunflower-gold) 100%);
+  background: linear-gradient(90deg, var(--jason-red) 0%, var(--sunflower-gold) 60%, var(--spotify-green) 100%);
   border-radius: 999px;
   transition: width 0.1s linear;
 }
@@ -560,13 +586,13 @@ html, body {
 .progress-thumb {
   position: absolute;
   top: 50%;
-  right: -5px;
+  right: -6px;
   transform: translateY(-50%) scale(0);
-  width: 12px;
-  height: 12px;
+  width: 14px;
+  height: 14px;
   background: #fff;
   border-radius: 50%;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
   transition: transform 0.15s ease;
 }
 
@@ -580,6 +606,7 @@ html, body {
   font-size: 0.82rem;
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
+  font-weight: 500;
 }
 
 /* Controles de reproducción */
@@ -587,7 +614,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
+  gap: 22px;
 }
 
 .ctrl-btn {
@@ -604,7 +631,7 @@ html, body {
 
 .ctrl-btn:hover {
   color: #fff;
-  transform: scale(1.1);
+  transform: scale(1.12);
 }
 
 .ctrl-btn.active {
@@ -612,8 +639,8 @@ html, body {
 }
 
 .ctrl-btn-play {
-  width: 60px;
-  height: 60px;
+  width: 62px;
+  height: 62px;
   border-radius: 50%;
   background: #fff;
   color: #000;
@@ -622,7 +649,7 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
   transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
@@ -630,7 +657,7 @@ html, body {
   background: var(--spotify-green-hover);
   color: #fff;
   transform: scale(1.08);
-  box-shadow: 0 8px 25px rgba(29, 185, 84, 0.55);
+  box-shadow: 0 10px 30px rgba(29, 185, 84, 0.6);
 }
 
 .ctrl-btn-play svg {
@@ -646,12 +673,12 @@ html, body {
 
 .btn-secondary-link {
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--border-card);
+  border: 1px solid var(--card-border);
   color: var(--text-main);
-  padding: 10px 20px;
+  padding: 11px 22px;
   border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.92rem;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -659,6 +686,7 @@ html, body {
 .btn-secondary-link:hover {
   background: rgba(255, 255, 255, 0.16);
   border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
 }
 
 /* Panel Derecho: Letras Spotify */
@@ -675,11 +703,12 @@ html, body {
   align-items: center;
   margin-bottom: 14px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--border-card);
+  border-bottom: 1px solid var(--card-border);
 }
 
 .lyrics-title-group h2 {
-  font-size: 1.3rem;
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
   font-weight: 800;
   color: #fff;
 }
@@ -696,9 +725,9 @@ html, body {
   padding: 40px 10px 160px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%);
+  gap: 20px;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 86%, transparent 100%);
 }
 
 .lyrics-viewport::-webkit-scrollbar {
@@ -712,14 +741,14 @@ html, body {
 
 /* Línea de Letra */
 .lyric-line {
-  font-size: 1.3rem;
+  font-size: 1.32rem;
   font-weight: 700;
   line-height: 1.45;
   color: rgba(255, 255, 255, 0.32);
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  padding: 6px 12px;
-  border-radius: 10px;
+  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 8px 16px;
+  border-radius: 12px;
   transform-origin: left center;
 }
 
@@ -728,18 +757,22 @@ html, body {
   background: rgba(255, 255, 255, 0.05);
 }
 
+/* Línea cantada en ese instante (Efecto Spotify Karaoke) */
 .lyric-line.is-active {
   color: #ffffff;
-  font-size: 1.6rem;
-  transform: scale(1.03) translateX(6px);
-  text-shadow: 0 0 20px rgba(251, 191, 36, 0.7), 0 0 35px rgba(29, 185, 84, 0.5);
+  font-size: 1.68rem;
+  font-weight: 800;
+  transform: scale(1.03) translateX(8px);
+  background: rgba(255, 255, 255, 0.07);
+  border-left: 5px solid var(--sunflower-gold);
+  animation: activeLyricPulse 3s ease-in-out infinite;
 }
 
 .lyric-line.is-passed {
-  color: rgba(255, 255, 255, 0.45);
+  color: rgba(255, 255, 255, 0.42);
 }
 
-/* Barra Flotante Mini-Player en Móvil para ver letras */
+/* Mini-Player flotante para móvil */
 .mobile-mini-player {
   display: none;
   position: fixed;
@@ -750,7 +783,7 @@ html, body {
   background: rgba(18, 24, 44, 0.95);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  border: 1px solid var(--border-card);
+  border: 1px solid var(--card-border);
   border-radius: 16px;
   padding: 8px 14px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
@@ -778,7 +811,7 @@ html, body {
 }
 
 .mini-title {
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
@@ -794,8 +827,8 @@ html, body {
   background: #fff;
   border: none;
   border-radius: 50%;
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -814,7 +847,7 @@ html, body {
    ========================================================================== */
 .finale-card {
   width: 100%;
-  max-width: 680px;
+  max-width: 700px;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -823,13 +856,13 @@ html, body {
 }
 
 .finale-artwork {
-  width: 160px;
-  height: 160px;
-  border-radius: 20px;
+  width: 170px;
+  height: 170px;
+  border-radius: 24px;
   overflow: hidden;
-  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.75);
   margin-bottom: 20px;
-  border: 2px solid rgba(251, 191, 36, 0.4);
+  border: 2px solid rgba(251, 191, 36, 0.45);
 }
 
 .finale-artwork img {
@@ -839,8 +872,9 @@ html, body {
 }
 
 .finale-title {
-  font-size: 2.1rem;
-  font-weight: 800;
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 900;
   margin-bottom: 8px;
   background: linear-gradient(135deg, #fff 0%, var(--sunflower-gold) 60%, var(--rose-love) 100%);
   -webkit-background-clip: text;
@@ -848,7 +882,7 @@ html, body {
 }
 
 .finale-subtitle {
-  font-size: 1.15rem;
+  font-size: 1.2rem;
   color: var(--rose-love);
   font-weight: 800;
   letter-spacing: 0.05em;
@@ -858,19 +892,19 @@ html, body {
 .letter-paper {
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 18px;
-  padding: 26px 28px;
+  border-radius: 20px;
+  padding: 28px 30px;
   text-align: left;
-  line-height: 1.8;
+  line-height: 1.85;
   color: #e2e8f0;
-  font-size: 1.02rem;
-  margin-bottom: 28px;
+  font-size: 1.04rem;
+  margin-bottom: 30px;
   position: relative;
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.25);
 }
 
 .letter-paper p {
-  margin-bottom: 14px;
+  margin-bottom: 16px;
 }
 
 .letter-paper p:last-child {
@@ -887,7 +921,7 @@ html, body {
   font-style: italic;
   font-weight: 700;
   color: var(--rose-love);
-  margin-top: 18px !important;
+  margin-top: 20px !important;
 }
 
 .finale-buttons {
@@ -898,33 +932,33 @@ html, body {
 }
 
 .btn-finale-listen {
-  padding: 14px 28px;
+  padding: 15px 30px;
   border-radius: 999px;
   background: linear-gradient(135deg, var(--spotify-green) 0%, var(--spotify-green-hover) 100%);
   color: #031307;
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   border: none;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  box-shadow: 0 8px 25px rgba(29, 185, 84, 0.35);
+  box-shadow: 0 8px 25px rgba(29, 185, 84, 0.4);
   transition: all 0.25s ease;
 }
 
 .btn-finale-listen:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px rgba(29, 185, 84, 0.5);
+  box-shadow: 0 12px 30px rgba(29, 185, 84, 0.55);
 }
 
 .btn-finale-restart {
-  padding: 14px 28px;
+  padding: 15px 30px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
-  border: 1px solid var(--border-card);
+  border: 1px solid var(--card-border);
   color: var(--text-main);
-  font-size: 1rem;
+  font-size: 1.05rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.25s ease;
@@ -948,7 +982,6 @@ html, body {
     gap: 16px;
   }
 
-  /* Control de visibilidad de paneles mediante tabs en móvil */
   .spotify-layout.view-player .lyrics-card {
     display: none;
   }
@@ -972,15 +1005,15 @@ html, body {
   }
 
   .player-cover-container {
-    max-width: 280px;
+    max-width: 290px;
   }
 
   .lyric-line {
-    font-size: 1.18rem;
+    font-size: 1.2rem;
   }
 
   .lyric-line.is-active {
-    font-size: 1.45rem;
+    font-size: 1.48rem;
   }
 }
 
@@ -995,18 +1028,18 @@ html, body {
   }
 
   .jason-title {
-    font-size: 1.85rem;
+    font-size: 1.95rem;
   }
 
   .welcome-title {
-    font-size: 1.7rem;
+    font-size: 1.75rem;
   }
 
   .track-title {
-    font-size: 1.4rem;
+    font-size: 1.45rem;
   }
 
   .player-cover-container {
-    max-width: 240px;
+    max-width: 250px;
   }
 }

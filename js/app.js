@@ -191,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
       loginError.textContent = "";
       goToStage("stage-welcome");
     } else {
-      loginError.textContent = "Contraseña incorrecta. Pista: nuestro día especial";
+      loginError.textContent = "Contraseña incorrecta. Pista: nuestro día especial (viernes13)";
       
       const card = document.getElementById("login-card");
       card.style.animation = "shakeError 0.45s ease";
@@ -449,39 +449,40 @@ function formatDuration(sec) {
 }
 
 // ==========================================================================
-// EFECTO CONFETI DE CORAZONES ROMÁNTICOS
+// EFECTO CONFETI: BESOS DE LABIAL, CORAZONES Y GIRASOLES
 // ==========================================================================
 function triggerHeartConfetti() {
-  const count = 20;
+  const emojis = ["💋", "❤️", "🌻", "💖", "✨"];
+  const count = 22;
   for (let i = 0; i < count; i++) {
-    const heart = document.createElement("div");
-    heart.innerHTML = Math.random() > 0.4 ? "❤️" : (Math.random() > 0.5 ? "🌻" : "💖");
-    heart.style.position = "fixed";
-    heart.style.left = `${50 + (Math.random() * 20 - 10)}vw`;
-    heart.style.bottom = `${30 + (Math.random() * 20)}vh`;
-    heart.style.fontSize = `${1.2 + Math.random() * 1.5}rem`;
-    heart.style.zIndex = "9999";
-    heart.style.pointerEvents = "none";
-    heart.style.transform = `scale(0.5) translate(0, 0)`;
-    heart.style.transition = `all ${1.2 + Math.random() * 0.8}s cubic-bezier(0.1, 1, 0.1, 1)`;
-    heart.style.opacity = "1";
-    document.body.appendChild(heart);
+    const el = document.createElement("div");
+    el.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+    el.style.position = "fixed";
+    el.style.left = `${50 + (Math.random() * 24 - 12)}vw`;
+    el.style.bottom = `${35 + (Math.random() * 20)}vh`;
+    el.style.fontSize = `${1.3 + Math.random() * 1.5}rem`;
+    el.style.zIndex = "9999";
+    el.style.pointerEvents = "none";
+    el.style.transform = `scale(0.4) translate(0, 0)`;
+    el.style.transition = `all ${1.2 + Math.random() * 0.8}s cubic-bezier(0.1, 1, 0.1, 1)`;
+    el.style.opacity = "1";
+    document.body.appendChild(el);
 
     setTimeout(() => {
-      const angle = (Math.random() - 0.5) * 350;
-      const dist = 120 + Math.random() * 200;
-      heart.style.transform = `scale(1.2) translate(${Math.sin(angle) * dist}px, ${-dist}px) rotate(${Math.random() * 360}deg)`;
-      heart.style.opacity = "0";
+      const angle = (Math.random() - 0.5) * 360;
+      const dist = 130 + Math.random() * 220;
+      el.style.transform = `scale(1.25) translate(${Math.sin(angle) * dist}px, ${-dist}px) rotate(${Math.random() * 360}deg)`;
+      el.style.opacity = "0";
     }, 20);
 
     setTimeout(() => {
-      heart.remove();
+      el.remove();
     }, 2200);
   }
 }
 
 // ==========================================================================
-// CANVAS DE FONDO: PÉTALOS DE GIRASOL, DESTELLOS Y BRUMA ROJA
+// CANVAS DE FONDO: BRASAS ASCENDENTES + PÉTALOS DE GIRASOL + FOGATAS DE NOCHE
 // ==========================================================================
 function initCanvasParticles() {
   const canvas = document.getElementById("canvas-backdrop");
@@ -497,20 +498,21 @@ function initCanvasParticles() {
   });
 
   const particles = [];
-  const PARTICLE_COUNT = 38;
+  const PARTICLE_COUNT = 45;
 
   for (let i = 0; i < PARTICLE_COUNT; i++) {
+    const isEmber = i % 2 === 0;
     particles.push({
       x: Math.random() * width,
       y: Math.random() * height,
-      size: 4 + Math.random() * 8,
-      speedY: 0.6 + Math.random() * 1.2,
-      speedX: (Math.random() - 0.5) * 0.7,
+      size: isEmber ? (2 + Math.random() * 3.5) : (5 + Math.random() * 7),
+      speedY: isEmber ? -(0.5 + Math.random() * 1.2) : (0.5 + Math.random() * 1.1), // Brasas suben, pétalos bajan
+      speedX: (Math.random() - 0.5) * 0.8,
       angle: Math.random() * Math.PI * 2,
       spin: (Math.random() - 0.5) * 0.04,
-      isPetal: i % 2 === 0,
-      opacity: 0.2 + Math.random() * 0.5,
-      hue: Math.random() > 0.4 ? 42 : 355 // Oro cálido y rojo sangre sutil
+      isEmber: isEmber,
+      opacity: 0.3 + Math.random() * 0.55,
+      hue: isEmber ? (Math.random() > 0.4 ? 355 : 35) : 45 // Rojo brasa o oro girasol
     });
   }
 
@@ -522,7 +524,11 @@ function initCanvasParticles() {
       p.x += Math.sin(p.angle) * p.speedX;
       p.angle += p.spin;
 
-      if (p.y > height + 20) {
+      // Wrap around
+      if (p.isEmber && p.y < -15) {
+        p.y = height + 15;
+        p.x = Math.random() * width;
+      } else if (!p.isEmber && p.y > height + 20) {
         p.y = -20;
         p.x = Math.random() * width;
       }
@@ -532,19 +538,21 @@ function initCanvasParticles() {
       ctx.rotate(p.angle);
       ctx.globalAlpha = p.opacity;
 
-      if (p.isPetal) {
-        // Pétalo de girasol
-        ctx.fillStyle = `hsl(${p.hue}, 95%, 60%)`;
+      if (p.isEmber) {
+        // Brasa de fogata nocturna estilo Camp Crystal Lake
+        ctx.fillStyle = p.hue === 355 ? "#ff2a51" : "#f59e0b";
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = p.hue === 355 ? "#e11d48" : "#fbbf24";
         ctx.beginPath();
-        ctx.ellipse(0, 0, p.size, p.size * 0.45, 0, 0, Math.PI * 2);
+        ctx.arc(0, 0, p.size, 0, Math.PI * 2);
         ctx.fill();
       } else {
-        // Destello dorado/carmesí
-        ctx.fillStyle = "#ffffff";
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = p.hue === 42 ? "#fbbf24" : "#ef4444";
+        // Pétalo de girasol suave
+        ctx.fillStyle = "#fbbf24";
+        ctx.shadowBlur = 6;
+        ctx.shadowColor = "rgba(251, 191, 36, 0.4)";
         ctx.beginPath();
-        ctx.arc(0, 0, p.size * 0.25, 0, Math.PI * 2);
+        ctx.ellipse(0, 0, p.size, p.size * 0.45, 0, 0, Math.PI * 2);
         ctx.fill();
       }
 
